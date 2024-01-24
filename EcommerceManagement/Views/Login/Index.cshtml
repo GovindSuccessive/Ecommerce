@@ -1,0 +1,80 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+@model EcommerceManagement.Models.Dto.LoginModel;
+
+<html>
+<head>
+    <style>
+        .mt50 {
+            margin-top: 150px;
+        }
+
+        .bordTBC {
+            border-top-left-radius: 120px;
+            border-bottom-left-radius: 120px;
+        }
+    </style>
+</head>
+<body>
+    <section class="h-100 gradient-form" style="background-color: #eee;">
+        <div class="container py-5 h-100">
+            <div class="row d-flex justify-content-center align-items-center h-100">
+                <div class="col-xl-10">
+                    <div class="card rounded-3 text-black">
+                        <div class="row g-0">
+                            <div class="col-lg-6">
+                                <div class="card-body p-md-5 mx-md-4">
+
+                                    <div class="text-center">
+                                        <img src="https://questionpapershub.com/free-job-alert/wp-content/uploads/2021/01/Successive-Technologies-Recruitment-2021.jpg"
+                                             style="width: 185px;" alt="logo">
+                                        <h4 class="mt-1 mb-5 pb-1">We are The Successive Team </h4>
+                                    </div>
+
+                                    <form method="post" asp-action="Loged" asp-controller="Login">
+                                        <p>Please login to your account</p>
+
+                                        <div class="form-outline mb-4">
+                                            <input type="email" id="form2Example11" class="form-control"
+                                                   placeholder="Phone number or email address" asp-for="UserName"/>
+                                            <label class="form-label" for="form2Example11">Username</label>
+                                        </div>
+
+                                        <div class="form-outline mb-4">
+                                            <input type="password" id="form2Example22" class="form-control" asp-for="Password" />
+                                            <label class="form-label" for="form2Example22">Password</label>
+                                        </div>
+
+                                        <div class="text-center pt-1 mb-5 pb-1">
+                                           <input type="submit" class="btn btn-outline-primary" />
+                                            <a class="text-muted" href="#!">Forgot password?</a>
+                                        </div>
+
+                                        <div class="d-flex align-items-center justify-content-center pb-4">
+                                            <p class="mb-0 me-2">Don't have an account?</p>
+                                            <a href="/UserRegistration" class="btn btn-outline-danger">Create new</a>
+                                        </div>
+
+                                    </form>
+
+                                </div>
+                            </div>
+                            <div class="col-lg-6 h-100 ">
+                                <div>
+                                    <img src="https://img.freepik.com/free-photo/view-3d-businessman_23-2150709814.jpg?size=626&ext=jpg" class="w-100 mt50  bordTBC" style="height:auto" />
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+</html>
