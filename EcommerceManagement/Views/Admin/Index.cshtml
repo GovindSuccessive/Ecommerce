@@ -1,13 +1,96 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
-}
-<html>
+﻿<!DOCTYPE html>
+<html lang="en">
 <head>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet"> 
+    <style>
+        .bgaqua{
+           background:#4549df;
+        }
+        .bglightblue{
+            background: #fbfbfb;
+        }
+        .fullwidth{
+            max-width:100%;
+        }
+    </style>
+    <title>Admin Dashboard</title>
 </head>
 <body>
-    <h1>Welcome to Admin DashBoard</h1>
+    <div class="container-fluid fullwidth">
+        <nav class="navbar navbar-expand-lg bgaqua w-100">
+            <!-- Your navbar content here -->
+            <nav class="navbar navbar-expand-lg  bgaqua">
+                <div class="container">
+                    <a class="navbar-brand text-white" href="#">Admin Dashboard</a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="navbar-nav me-auto ">
+                            <li class="nav-item">
+                                <form class="d-flex">
+                                    <input class="form-control me-2 ms-4" type="search" placeholder="Search" aria-label="Search">
+                                    <button class="btn btn-success text-white" type="submit">Search</button>
+                                </form>
+                            </li>
+                        </ul>
+                        <ul class="navbar-nav mt-md-4 mt-lg-0">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <img src="profile-photo.jpg" alt="Profile Photo" width="30" height="30" class="rounded-circle">
+                                </a>
+                                <ul class="dropdown-menu " aria-labelledby="navbarDropdown">
+                                    <li><a class="dropdown-item" href="#">Profile</a></li>
+                                    <li><a class="dropdown-item" href="#">Logout</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </nav>
+    </div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <nav id="sidebar" class="col-lg-3 d-md-block sidebar h-100 bglightblue border-end-0">
+                <!-- Your sidebar content here -->
+                <div class="position-sticky">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="#">Dashboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Orders</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Products</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="sidebarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Settings
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="sidebarDropdown">
+                                <li><a class="dropdown-item" href="#">General</a></li>
+                                <li><a class="dropdown-item" href="#">Security</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+
+            </nav>
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <!-- Main content goes here -->
+            </main>
+        </div>
+    </div>
+
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+
+
+
+

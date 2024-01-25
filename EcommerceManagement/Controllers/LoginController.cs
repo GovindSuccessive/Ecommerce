@@ -36,7 +36,15 @@ namespace EcommerceManagement.Controllers
                     {
                         // Password is correct, proceed with login
                         // You can set authentication cookies or tokens here
-                        return RedirectToAction("Index", "Admin"); // Redirect to the home page after successful login
+                        // Redirect to the home page after successful login
+                        if (user.Role == "admin")
+                        {
+                            return RedirectToAction("Index", "Admin");
+                        }
+                        else
+                        {
+                            return RedirectToAction("Index", "Home");
+                        }
                     }
                 }
 
