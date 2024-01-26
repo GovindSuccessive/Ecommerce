@@ -1,12 +1,30 @@
 using EcommerceManagement.Data;
+using EcommerceManagement.Models.Domain;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
+using System;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddDbContext<EcommerceDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddControllersWithViews();
+
+// Add Authentication Identity
+
+builder.Services.AddIdentity<UserModel, IdentityRole>(
+    options =>
+    {
+        options.Password.RequiredUniqueChars = 0;
+        options.Password.RequireUppercase = false;
+        options.Password.RequiredLength = 8;
+        options.Password.RequireNonAlphanumeric = false;
+        options.Password.RequireLowercase = false;
+       /* options.User.RequireUniqueEmail = true;*/
+        options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+/ ";
+    })
+    .AddEntityFrameworkStores<EcommerceDbContext>().AddDefaultTokenProviders();
 
 var app = builder.Build();
 
@@ -34,6 +52,13 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Login}/{action=Index}/{id?}");
+    pattern: "{controller=Authentication}/{action=Login}/{id?}");
+
+
+using (var scope = app.Services.CreateScope())
+{
+    await DbSeeder.SeedRolesAndAdminAsync(scope.ServiceProvider);
+}
+
 
 app.Run();

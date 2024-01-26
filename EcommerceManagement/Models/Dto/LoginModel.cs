@@ -1,9 +1,19 @@
-﻿namespace EcommerceManagement.Models.Dto
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace EcommerceManagement.Models.Dto
 {
     public class LoginModel
     {
-        public string UserName { get; set; }    
+        [Required(ErrorMessage = "Username is required.")]
+        
+        public string? Username { get; set; }
 
-        public string Password { get; set; }    
+        [Required(ErrorMessage = "Password is required.")]
+        [DataType(DataType.Password)]
+        [MinLength(8, ErrorMessage = "Password should be minimum 8 character long")]
+        public string? Password { get; set; }
+
+        [Display(Name = "Remember Me")]
+        public bool RememberMe { get; set; }
     }
 }

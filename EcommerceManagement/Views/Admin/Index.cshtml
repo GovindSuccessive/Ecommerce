@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+﻿@using EcommerceManagement.Models.Domain
+﻿@using Microsoft.AspNetCore.Identity;
+@inject SignInManager<UserModel> signInManager
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -14,73 +17,74 @@
         .fullwidth{
             max-width:100%;
         }
+        .bggrey{
+            background-color: #f2ebeb;
+        }
     </style>
     <title>Admin Dashboard</title>
 </head>
 <body>
-    <div class="container-fluid fullwidth">
-        <nav class="navbar navbar-expand-lg bgaqua w-100">
+    <nav class="navbar navbar-expand-sm navbar-toggleable-sm bgaqua d-flex justify-content-between ">
             <!-- Your navbar content here -->
-            <nav class="navbar navbar-expand-lg  bgaqua">
+            <nav class="navbar navbar-expand-lg d-flex justify-content-between  bgaqua">
                 <div class="container">
                     <a class="navbar-brand text-white" href="#">Admin Dashboard</a>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <div class="collapse navbar-collapse" id="navbarNav">
-                        <ul class="navbar-nav me-auto ">
-                            <li class="nav-item">
-                                <form class="d-flex">
-                                    <input class="form-control me-2 ms-4" type="search" placeholder="Search" aria-label="Search">
-                                    <button class="btn btn-success text-white" type="submit">Search</button>
-                                </form>
-                            </li>
-                        </ul>
-                        <ul class="navbar-nav mt-md-4 mt-lg-0">
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <img src="profile-photo.jpg" alt="Profile Photo" width="30" height="30" class="rounded-circle">
-                                </a>
-                                <ul class="dropdown-menu " aria-labelledby="navbarDropdown">
-                                    <li><a class="dropdown-item" href="#">Profile</a></li>
-                                    <li><a class="dropdown-item" href="#">Logout</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </div>
+                   <div>
+                      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                          <span class="navbar-toggler-icon"></span>
+                      </button>
+                      <div class="collapse navbar-collapse" id="navbarNav">
+                          <ul class="navbar-nav me-auto ">
+                              <li class="nav-item">
+                                  <form class="d-flex">
+                                      <input class="form-control me-2 ms-4" type="search" placeholder="Search" aria-label="Search">
+                                      <button class="btn btn-success text-white" type="submit">Search</button>
+                                  </form>
+                              </li>
+                          </ul>
+                          <ul class="navbar-nav mt-md-4 mt-lg-0">
+                              <li class="nav-item dropdown">
+                                  <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                      <span class="fs-4"> Hello </span><span class="fst-italic fw-bold fs-4">@User.Identity!.Name</span>
+                                  </a>
+                                  <ul class="dropdown-menu " aria-labelledby="navbarDropdown">
+                                      <li><a class="dropdown-item" href="#">Profile</a></li>
+                                      <li><a class="dropdown-item" >Logout</a></li>
+                                  </ul>
+                              </li>
+                          </ul>
+                      </div>
+                   </div>
                 </div>
             </nav>
         </nav>
-    </div>
 
     <div class="container-fluid">
         <div class="row">
-            <nav id="sidebar" class="col-lg-3 d-md-block sidebar h-100 bglightblue border-end-0">
-                <!-- Your sidebar content here -->
-                <div class="position-sticky">
-                    <ul class="nav flex-column">
-                        <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="#">Dashboard</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Orders</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Products</a>
-                        </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="sidebarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Settings
-                            </a>
-                            <ul class="dropdown-menu" aria-labelledby="sidebarDropdown">
-                                <li><a class="dropdown-item" href="#">General</a></li>
-                                <li><a class="dropdown-item" href="#">Security</a></li>
-                            </ul>
-                        </li>
+            <div class="col-md-3 d-flex flex-column bggrey vh-100">
+                <div class="btn-group dropend mt-3 ">
+                    <button type="button" class="btn  fs-3 dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                       Product Category
+                    </button>
+                    <ul class="dropdown-menu fs-2">
+                        <li><a class="dropdown-item" href="#">All</a></li>
+                        <li><a class="dropdown-item" href="#">Clothing</a></li>
+                        <li><a class="dropdown-item" href="#">Electronics</a></li>
+                        <li><a class="dropdown-item" href="#">Furniture</a></li>
+                        <li><a class="dropdown-item" href="#">Books</a></li>
                     </ul>
                 </div>
-
-            </nav>
+                <div class="btn-group dropend mt-3 ">
+                    <button type="button" class="btn fs-3 dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                        Users
+                    </button>
+                    <ul class="dropdown-menu fs-2">
+                        <li><a class="dropdown-item" href="#">All Users</a></li>
+                        <li><a class="dropdown-item" href="#">Menu item</a></li>
+                        <li><a class="dropdown-item" href="#">Menu item</a></li>
+                    </ul>
+                </div>
+            </div>
             <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
                 <!-- Main content goes here -->
             </main>

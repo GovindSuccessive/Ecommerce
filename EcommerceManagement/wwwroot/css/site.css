@@ -1,6 +1,13 @@
+*{
+    margin:0;
+    padding:0;
+    text-decoration:none;
+}
+
 html {
   font-size: 14px;
 }
+
 
 @media (min-width: 768px) {
   html {
