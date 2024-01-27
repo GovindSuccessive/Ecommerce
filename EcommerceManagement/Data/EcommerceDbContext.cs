@@ -1,4 +1,5 @@
-﻿using EcommerceManagement.Models.Domain;
+﻿using EcommerceManagement.Configuration;
+using EcommerceManagement.Models.Domain;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -15,5 +16,16 @@ namespace EcommerceManagement.Data
         public DbSet<ProductModel> Products { get; set; }
 
         public DbSet<CategoryModel> Categories { get; set; }
+
+        public DbSet<CartModel> Carts { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            // modelBuilder.ApplyConfigurationsFromAssembly(GetType().Assembly);
+            modelBuilder.ApplyConfiguration(new ProductConfiguration());
+            modelBuilder.ApplyConfiguration(new CategoryConfiguration());
+            modelBuilder.ApplyConfiguration(new CartConfiguration());
+            base.OnModelCreating(modelBuilder);
+        }
     }
 }

@@ -1,0 +1,36 @@
+﻿@model List<EcommerceManagement.Models.Dto.ProductCategoryDto>
+
+@{
+    ViewData["Title"] = "GetAll";
+}
+
+<table>
+    <thead>
+        <tr>
+            <th>Product Id</th>
+            <th>Product Name</th>
+            <th>Product Description</th>
+            <th>Product Price</th>
+            <th>Is Available</th>
+            <th>Is Trending</th>
+            <th>Category Name</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null)
+        {
+            @foreach (var product in Model)
+            {
+                <tr>
+                    <td>@product.ProductId</td>
+                    <td>@product.ProductName</td>
+                    <td>@product.ProductDes</td>
+                    <td>@product.ProductPrice</td>
+                    <td>@product.IsAvailable</td>
+                    <td>@product.IsTrending</td>
+                    <td>@product.CatagoryName</td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>

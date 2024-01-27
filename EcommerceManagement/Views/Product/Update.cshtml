@@ -1,0 +1,58 @@
+﻿@model EcommerceManagement.Models.Dto.UpdateProductDto;
+
+@{
+    ViewData["Title"] = "UpdateProduct";
+    var categoryList = ViewBag.CategoryList as List<EcommerceManagement.Models.Domain.CategoryModel>;
+}
+
+<h2>Update Product</h2>
+
+<form asp-action="Update" method="post" enctype="multipart/form-data" asp-controller="Product">
+    <div class="form-group">
+        <input asp-for="ProductId" class="form-control" type="text" placeholder="Product Id"  readonly/>
+        <span asp-validation-for="ProductId" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <input asp-for="ProductName" class="form-control" type="text" placeholder="Product Name" />
+        <span asp-validation-for="ProductName" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <input asp-for="ProductDes" class="form-control" type="text" placeholder="Product Description" />
+        <span asp-validation-for="ProductDes" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <input asp-for="ProductPrice" class="form-control" type="number" placeholder="Product Price" />
+        <span asp-validation-for="ProductPrice" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <input asp-for="ProductImage" class="form-control" type="file" placeholder="Product Image" />
+        <span asp-validation-for="ProductImage" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="IsAvailable"></label>
+        <input asp-for="IsAvailable" type="checkbox" />
+        <span asp-validation-for="IsAvailable" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="IsTrending"></label>
+        <input asp-for="IsTrending" type="checkbox" />
+        <span asp-validation-for="IsTrending" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <select class="form-select" aria-label="Default select example" asp-for="CategoryRefId">
+            <option selected value="00000000-0000-0000-0000-000000000000">All</option>
+            @if (categoryList != null)
+            {
+                @foreach (var x in categoryList)
+                {
+
+                    @if (x.CategoryName != "All")
+                    {
+                        <option value="@x.CategoryId">@x.CategoryName</option>
+                    }
+                }
+            }
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Add Product</button>
+</form>

@@ -22,15 +22,64 @@ namespace EcommerceManagement.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var product = _ecommerceDbContext.Products.ToListAsync();
-            return View(product);
+            var productList = _ecommerceDbContext.Products.ToList();
+            var categoryList = _ecommerceDbContext.Categories.ToList();
+            var categoryProduct = productList.Join(// outer sequence 
+                       categoryList,  // inner sequence 
+                       product => product.CategoryRefId,   // outerKeySelector
+                       category => category.CategoryId, // innerKeySelector
+                       (product, category) => new ProductCategoryDto // result selector
+                       {
+                           ProductId = product.ProductId,
+                           ProductName = product.ProductName,
+                           ProductDes = product.ProductDes,
+                           ProductPrice = product.ProductPrice,
+                           ProductImage = product.ProductImage,
+                           IsAvailable = product.IsAvailable,
+                           IsTrending = product.IsTrending,
+                           CatagoryId = category.CategoryId,
+                           CatagoryName = category.CategoryName
+                       }).ToList();
+            return View(categoryProduct);
         }
 
+        [HttpGet]
+
+        public async Task<IActionResult> GetProductsByCategory(Guid categoryId)
+        {
+            var productList = await _ecommerceDbContext.Products.ToListAsync();
+            var categoryList = await _ecommerceDbContext.Categories.ToListAsync();
+            var categoryProduct = productList.Join(// outer sequence 
+                       categoryList,  // inner sequence 
+                       product => product.CategoryRefId,   // outerKeySelector
+                       category=>category.CategoryId, // innerKeySelector
+                       (product, category) => new ProductCategoryDto // result selector
+                       {
+                           ProductId= product.ProductId,
+                           ProductName=product.ProductName,
+                           ProductDes=product.ProductDes,
+                           ProductPrice=product.ProductPrice,
+                           ProductImage=product.ProductImage,
+                           IsAvailable=product.IsAvailable,
+                           IsTrending=product.IsTrending,
+                           CatagoryId=category.CategoryId,
+                           CatagoryName=category.CategoryName
+                       }).ToList();
+            var selectedProducts = categoryProduct.Where(x=>x.CatagoryId== categoryId).ToList();
+            if (categoryId == Guid.Parse("00000000-0000-0000-0000-000000000000")){
+                return PartialView("_ProductListPartial", categoryProduct);
+            }
+            else
+            {
+                return PartialView("_ProductListPartial", selectedProducts);
+            }
+
+        }
 
         [HttpGet]
         public async Task<IActionResult> AddProduct()
         {
-            ViewBag.Course = await _ecommerceDbContext.Products.ToListAsync();
+            ViewBag.CategoryList = await _ecommerceDbContext.Categories.ToListAsync();
             return View();
         }
 
@@ -52,16 +101,16 @@ namespace EcommerceManagement.Controllers
                     ProductId = Guid.NewGuid(),
                     ProductName = addProductDto.ProductName,
                     ProductPrice = addProductDto.ProductPrice,
-                    ProductDes = addProductDto.ProductDes,
+                    ProductDes = addProductDto.ProductDes!,
                     IsAvailable = addProductDto.IsAvailable,
                     IsTrending = addProductDto.IsTrending,
                     CategoryRefId = addProductDto.CategoryRefId,
-                    Category = addProductDto.Category,
                     ProductImage = uniqueFileName,
                 };
                 _ecommerceDbContext.Products.Add(product);
                 await _ecommerceDbContext.SaveChangesAsync();
                 ViewBag.Success = "Student Added Successfully";
+               
                 return RedirectToAction("GetAll");
             }
             return View(addProductDto);
@@ -71,7 +120,7 @@ namespace EcommerceManagement.Controllers
         public async Task<IActionResult> Update(Guid id)
         {
             var product = await _ecommerceDbContext.Products.FirstOrDefaultAsync(x => x.ProductId == id);
-            ViewBag.CourseList = _ecommerceDbContext.Categories.ToList();
+            ViewBag.CategoryList = await _ecommerceDbContext.Categories.ToListAsync();
             if (product != null)
             {
                 var newProduct = new UpdateProductDto()
