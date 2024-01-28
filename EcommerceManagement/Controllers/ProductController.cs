@@ -22,8 +22,8 @@ namespace EcommerceManagement.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var productList = _ecommerceDbContext.Products.ToList();
-            var categoryList = _ecommerceDbContext.Categories.ToList();
+            var productList = await _ecommerceDbContext.Products.ToListAsync();
+            var categoryList =await  _ecommerceDbContext.Categories.ToListAsync();
             var categoryProduct = productList.Join(// outer sequence 
                        categoryList,  // inner sequence 
                        product => product.CategoryRefId,   // outerKeySelector
@@ -36,9 +36,11 @@ namespace EcommerceManagement.Controllers
                            ProductPrice = product.ProductPrice,
                            ProductImage = product.ProductImage,
                            IsAvailable = product.IsAvailable,
+                           IsActive = product.IsActive,
+                           ProductCreated=product.ProductCreated,
                            IsTrending = product.IsTrending,
-                           CatagoryId = category.CategoryId,
-                           CatagoryName = category.CategoryName
+                           CategoryId = category.CategoryId,
+                           CategoryName = category.CategoryName
                        }).ToList();
             return View(categoryProduct);
         }
@@ -62,12 +64,13 @@ namespace EcommerceManagement.Controllers
                            ProductImage=product.ProductImage,
                            IsAvailable=product.IsAvailable,
                            IsTrending=product.IsTrending,
-                           CatagoryId=category.CategoryId,
-                           CatagoryName=category.CategoryName
-                       }).ToList();
-            var selectedProducts = categoryProduct.Where(x=>x.CatagoryId== categoryId).ToList();
-            if (categoryId == Guid.Parse("00000000-0000-0000-0000-000000000000")){
-                return PartialView("_ProductListPartial", categoryProduct);
+                           CategoryId=category.CategoryId,
+                           CategoryName=category.CategoryName
+                       });
+            var selectedProducts = categoryProduct.Where(x => x.CategoryId.Equals(categoryId) && x.IsActive).ToList();
+            if (categoryId == Guid.Parse("00000000-0000-0000-0000-000000000000"))
+            {
+                return PartialView("_ProductListPartial", categoryProduct.Where(x=>x.IsActive==true));
             }
             else
             {
@@ -111,7 +114,7 @@ namespace EcommerceManagement.Controllers
                 await _ecommerceDbContext.SaveChangesAsync();
                 ViewBag.Success = "Student Added Successfully";
                
-                return RedirectToAction("GetAll");
+                return RedirectToAction("Index","Admin");
             }
             return View(addProductDto);
         }
@@ -125,12 +128,13 @@ namespace EcommerceManagement.Controllers
             {
                 var newProduct = new UpdateProductDto()
                 {
+                    ProdId = product.ProductId,
                     ProductName = product.ProductName,
                     ProductPrice = product.ProductPrice,
                     ProductDes = product.ProductDes,
                     IsAvailable = product.IsAvailable,
                     IsTrending = product.IsTrending,
-                    ProductImage = product.ProductImage,
+                   /* ProductImage = product.ProductImage,*/
                     CategoryRefId = product.CategoryRefId,
                     Category = product.Category,
                 };
@@ -140,24 +144,55 @@ namespace EcommerceManagement.Controllers
         }
 
         [HttpPost]
-
         public async Task<IActionResult> Update(UpdateProductDto updateProductDto)
         {
-            var product = await _ecommerceDbContext.Products.FirstOrDefaultAsync(x => x.ProductId == updateProductDto.ProductId);
+            var product = await _ecommerceDbContext.Products.FirstOrDefaultAsync(x => x.ProductId == updateProductDto.ProdId);
             ViewBag.CourseList = _ecommerceDbContext.Categories.ToList();
+
+            string uniqueFileName = "";
+            if (updateProductDto.ProductImage != null)
+            {
+                string uploadFoler = Path.Combine(_webHostEnvironment.WebRootPath, "image");
+                uniqueFileName = Guid.NewGuid().ToString() + "_" + updateProductDto.ProductImage.FileName;
+                string filePath = Path.Combine(uploadFoler, uniqueFileName);
+                updateProductDto.ProductImage.CopyTo(new FileStream(filePath, FileMode.Create));
+            }
+
             if (product != null)
             {
-                var newProduct = new UpdateProductDto()
-                {
-                    ProductName = product.ProductName,
-                    ProductPrice = product.ProductPrice,
-                    ProductDes = product.ProductDes,
-                    IsAvailable = product.IsAvailable,
-                    IsTrending = product.IsTrending,
-                    ProductImage = product.ProductImage,
-                    CategoryRefId = product.CategoryRefId,
-                    Category = product.Category,
-                };
+                product.ProductName = updateProductDto.ProductName;
+                product.ProductPrice = updateProductDto.ProductPrice;
+                product.ProductDes = updateProductDto.ProductDes;
+                product.ProductImage = uniqueFileName;
+                product.IsAvailable= updateProductDto.IsAvailable;
+                product.IsTrending=updateProductDto.IsTrending;
+                product.CategoryRefId= updateProductDto.CategoryRefId;
+            }
+                await _ecommerceDbContext.SaveChangesAsync();
+            return RedirectToAction("Index","Admin");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Active(Guid id)
+        {
+            var product = _ecommerceDbContext.Products.FirstOrDefault(x => x.ProductId == id);
+
+            if (product != null)
+            {
+                product.IsActive = true;
+                await _ecommerceDbContext.SaveChangesAsync();
+            }
+            return RedirectToAction("GetAll");               
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Deactive(Guid id)
+        {
+            var product =await _ecommerceDbContext.Products.FirstOrDefaultAsync(x => x.ProductId == id);
+
+            if (product != null)
+            {
+                product.IsActive = false;
                 await _ecommerceDbContext.SaveChangesAsync();
             }
             return RedirectToAction("GetAll");
@@ -166,13 +201,13 @@ namespace EcommerceManagement.Controllers
         [HttpGet]
         public async Task<IActionResult> Delete(Guid id)
         {
-            var student = _ecommerceDbContext.Products.FirstOrDefault(x => x.ProductId == id);
-            if (student != null)
+            var product = _ecommerceDbContext.Products.FirstOrDefault(x => x.ProductId == id);
+            if (product != null)
             {
-               _ecommerceDbContext.Products.Remove(student);
+               _ecommerceDbContext.Products.Remove(product);
                 await _ecommerceDbContext.SaveChangesAsync();
             }
-            return RedirectToAction("Index");
+            return RedirectToAction("GetAll");
         }
     }
 }

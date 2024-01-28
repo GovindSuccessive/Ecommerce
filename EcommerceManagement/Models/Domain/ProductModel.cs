@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace EcommerceManagement.Models.Domain
 {
@@ -13,11 +14,16 @@ namespace EcommerceManagement.Models.Domain
 
         public int ProductPrice { get; set; }
 
-        public string ProductImage { get; set; } 
+        public string ProductImage { get; set; }
 
+        [DefaultValue(true)]
         public bool IsAvailable { get; set; }
 
         public bool IsTrending { get; set; }
+
+        public bool IsActive { get; set; }
+
+        public DateTime ProductCreated { get; set; }
 
         public CategoryModel Category { get; set; }
 

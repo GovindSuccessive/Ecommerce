@@ -2,29 +2,49 @@
 ﻿@using Microsoft.AspNetCore.Identity;
 @inject SignInManager<UserModel> signInManager
 
-<ul class="navbar-nav">
-    @if (signInManager.IsSignedIn(User))
-    {
-        <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle text-dark" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                <span class="fst-italic fs-4"> Hello</span> <span class="fs-4 fw-bold"> @User.Identity!.Name</span>
-            </a>
-            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <li>
-                    <a class="dropdown-item" asp-action="Logout" asp-controller="Authentication">
-                        Logout
-                    </a>
-                </li>
-            </ul>
-        </li>
-    }
-    else
-    {
-        <li class="nav-item">
-            <a class="nav-link text-dark " asp-area="" asp-controller="Authentication" asp-action="Register">Register</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link text-dark" asp-area="" asp-controller="Authentication" asp-action="Login">Login</a>
-        </li>
-    }
-</ul>
+<html>
+    <head>
+        <style>
+        .fontsytle {
+            font-family: font-family: 'Cinzel', serif;
+        }
+        </style>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600&display=swap" rel="stylesheet">
+    </head>
+    <body>
+
+    <ul class="navbar-nav fontsytle">
+        @if (signInManager.IsSignedIn(User))
+        {
+            @if (User.IsInRole("Admin"))
+            {
+                <li class="nav-item fontsytle"><a class="nav-link text-dark fs-4 fontsytle" href="/Admin/Index">My Dashboard</a></li>
+            }
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle text-dark" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <span class="fst-italic fs-4"> Hello</span> <span class="fs-4 fw-bold"> @User.Identity!.Name</span>
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <li>
+                        <a class="dropdown-item" asp-action="Logout" asp-controller="Authentication">
+                            Logout
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+        }
+        else
+        {
+            <li class="nav-item">
+                <a class="nav-link text-dark " asp-area="" asp-controller="Authentication" asp-action="Register">Register</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link text-dark" asp-area="" asp-controller="Authentication" asp-action="Login">Login</a>
+            </li>
+        }
+    </ul>
+    </body>
+</html>

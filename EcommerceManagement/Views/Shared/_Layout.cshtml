@@ -22,6 +22,13 @@
         .nav-link:hover{
             color:#1d58af;
         }
+
+        .bgaqua {
+            background: #4549df;
+        }
+        .fontsytle{
+            font-family: font-family: 'Cinzel', serif;
+        }
     </style>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -30,18 +37,16 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/EcommerceManagement.styles.css" asp-append-version="true" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600&display=swap" rel="stylesheet">
 </head>
 <body>
-    @if (User.IsInRole("Admin"))
-    {
 
-    }
-    @if(User.IsInRole("User"))
-    {
         <header>
-            <nav class="navbar navbar-expand-sm navbar-toggleable-sm  mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm ">
                 <div class="container-fluid">
-                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><spna class="fst-italic fw-bold fs-3 txskyblue">Easy</spna><span class="fw-bold fs-3 text-secondary">Mart</span></a>
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><spna class="fst-italic fw-bold fs-3 txskyblue">Easy</spna><span class="fw-bold fs-3 text-secondary">Mart</span></a>
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                             aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
@@ -52,7 +57,7 @@
                 </div>
             </nav>
         </header>
-    }
+    
     <div class="container-fluid">
         <main role="main" class="pb-3">
             @RenderBody()

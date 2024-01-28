@@ -1,5 +1,6 @@
 ﻿@{
     var CategoryList = ViewBag.CategoryList as List<EcommerceManagement.Models.Domain.CategoryModel>;
+    ViewData["Title"] = "Admin Dashboard";
 }
 
 
@@ -22,14 +23,17 @@
         .bggrey{
             background-color: #f2ebeb;
         }
+        .ofxh{
+            overflow-y:hidden;
+        }
     </style>
     <title>Admin Dashboard</title>
 </head>
-<body>
-    <nav class="navbar navbar-expand-sm navbar-toggleable-sm bgaqua d-flex justify-content-between ">
+<body class="ofxh">
+    <nav class="navbar navbar-expand-sm navbar-toggleable-sm bgaqua d-none ">
             <!-- Your navbar content here -->
-            <nav class="navbar navbar-expand-lg d-flex justify-content-between  bgaqua">
-                <div class="container">
+            <nav class="navbar navbar-expand-lg d-flex justify-content-between  bgaqua w-100">
+                <div class="container-fluid">
                     <a class="navbar-brand text-white" href="#">Admin Dashboard</a>
                    <div>
                       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -51,7 +55,7 @@
                                   </a>
                                   <ul class="dropdown-menu " aria-labelledby="navbarDropdown">
                                       <li><a class="dropdown-item" href="#">Profile</a></li>
-                                      <li><a class="dropdown-item" >Logout</a></li>
+                                      <li><a class="dropdown-item" asp-action="Logout" asp-controller="Authentication" >Logout</a></li>
                                   </ul>
                               </li>
                           </ul>
@@ -64,25 +68,7 @@
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-2 d-flex flex-column bggrey vh-100">
- @*                <div class="btn-group dropend mt-3 ">
-                    <button type="button" class="btn  fs-3 dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-                       Product Category
-                    </button>
-                    <ul class="dropdown-menu fs-2" aria-labelledby="categoryDropdown">
-                        @if (CategoryList != null)
-                        {
-                            <li><a class="dropdown-item" href="#" data-category-id="all">All</a></li>
-                           @foreach(var category in CategoryList)
-                           {
-                               <li><a class="dropdown-item" href="#" data-category-id="@category.CategoryId">@category.CategoryName</a></li>
-                           }
-                        }
-
-                    </ul>
-
-
-                </div> *@
-                <select class="form-select" id="categoryId">
+                <select class="form-select mt-5" id="categoryId" >
                     @if(CategoryList!=null && CategoryList.Count > 0)
                     {
                         @foreach(var x in CategoryList)
@@ -101,6 +87,7 @@
                         <li><a class="dropdown-item" href="#">Menu item</a></li>
                     </ul>
                 </div>
+                    <a class="btn btn-outline-info w-100" href="/Product/GetAll">GetAll Products</a>
             </div>
             <main class="col-md-10 ms-sm-auto  px-md-4" id="productList">
                 <!-- Main content goes here -->

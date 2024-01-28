@@ -1,14 +1,16 @@
-﻿namespace EcommerceManagement.Models.Dto
+﻿using System.ComponentModel;
+
+namespace EcommerceManagement.Models.Dto
 {
     public class ProductCategoryDto
     {
         public Guid ProductId { get; set; }
 
-        public Guid CatagoryId { get; set; }
+        public Guid CategoryId { get; set; }
 
         public string ProductName { get; set; }
 
-        public string CatagoryName { get; set; }
+        public string CategoryName { get; set; }
 
         public string CategoryDes {  get; set; }
 
@@ -18,6 +20,12 @@
 
         public string ProductImage { get; set; }
 
+        [DefaultValue(true)]
+        public bool IsActive {  get; set; }
+
+        public DateTime ProductCreated {  get; set; }
+
+        [DefaultValue(true)]
         public bool IsAvailable { get; set; }
 
         public bool IsTrending { get; set; }

@@ -4,18 +4,22 @@ namespace EcommerceManagement.Models.Dto
 {
     public class UpdateProductDto
     {
-        public  Guid ProductId;
+        public Guid ProdId { get; set; }
         public string ProductName { get; set; }
 
         public string ProductDes { get; set; } // Product description
 
         public int ProductPrice { get; set; }
 
-        public string ProductImage { get; set; }
+        public IFormFile ProductImage { get; set; }
 
         public bool IsAvailable { get; set; }
 
         public bool IsTrending { get; set; }
+
+        public bool IsActive { get; set; }
+
+        public DateTime ProductCreated { get; set; }
 
         public CategoryModel Category { get; set; }
 

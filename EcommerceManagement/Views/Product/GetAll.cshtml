@@ -4,16 +4,16 @@
     ViewData["Title"] = "GetAll";
 }
 
-<table>
+<table class="table">
     <thead>
         <tr>
-            <th>Product Id</th>
             <th>Product Name</th>
             <th>Product Description</th>
             <th>Product Price</th>
             <th>Is Available</th>
             <th>Is Trending</th>
             <th>Category Name</th>
+            <th>Action</th>
         </tr>
     </thead>
     <tbody>
@@ -22,13 +22,23 @@
             @foreach (var product in Model)
             {
                 <tr>
-                    <td>@product.ProductId</td>
                     <td>@product.ProductName</td>
                     <td>@product.ProductDes</td>
                     <td>@product.ProductPrice</td>
                     <td>@product.IsAvailable</td>
                     <td>@product.IsTrending</td>
-                    <td>@product.CatagoryName</td>
+                    <td>@product.CategoryName</td>
+                    <td>
+                        <a class="btn btn-primary" href="/Product/Update/@product.ProductId">Edit</a>
+                        @if (product.IsActive)
+                        {
+                            <a class="btn btn-danger" href="/Product/Deactive/@product.ProductId">Deactive</a>
+                        }
+                        else
+                        {
+                            <a class="btn btn-success" href="/Product/Active/@product.ProductId">Active</a>
+                        }
+                    </td>
                 </tr>
             }
         }

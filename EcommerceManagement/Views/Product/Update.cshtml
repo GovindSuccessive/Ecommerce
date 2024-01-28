@@ -2,15 +2,15 @@
 
 @{
     ViewData["Title"] = "UpdateProduct";
-    var categoryList = ViewBag.CategoryList as List<EcommerceManagement.Models.Domain.CategoryModel>;
+    var categoryList = ViewBag.CategoryList;
 }
 
 <h2>Update Product</h2>
 
 <form asp-action="Update" method="post" enctype="multipart/form-data" asp-controller="Product">
     <div class="form-group">
-        <input asp-for="ProductId" class="form-control" type="text" placeholder="Product Id"  readonly/>
-        <span asp-validation-for="ProductId" class="text-danger"></span>
+        <input asp-for="ProdId" class="form-control"  placeholder="Product Id" readonly />
+        <span asp-validation-for="ProdId" class="text-danger"></span>
     </div>
     <div class="form-group">
         <input asp-for="ProductName" class="form-control" type="text" placeholder="Product Name" />
