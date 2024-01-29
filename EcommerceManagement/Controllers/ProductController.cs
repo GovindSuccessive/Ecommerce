@@ -41,7 +41,7 @@ namespace EcommerceManagement.Controllers
                            IsTrending = product.IsTrending,
                            CategoryId = category.CategoryId,
                            CategoryName = category.CategoryName
-                       }).ToList();
+                       }).OrderByDescending(x=>x.ProductCreated).ToList();
             return View(categoryProduct);
         }
 
@@ -54,23 +54,24 @@ namespace EcommerceManagement.Controllers
             var categoryProduct = productList.Join(// outer sequence 
                        categoryList,  // inner sequence 
                        product => product.CategoryRefId,   // outerKeySelector
-                       category=>category.CategoryId, // innerKeySelector
+                       category => category.CategoryId, // innerKeySelector
                        (product, category) => new ProductCategoryDto // result selector
                        {
-                           ProductId= product.ProductId,
-                           ProductName=product.ProductName,
-                           ProductDes=product.ProductDes,
-                           ProductPrice=product.ProductPrice,
-                           ProductImage=product.ProductImage,
-                           IsAvailable=product.IsAvailable,
-                           IsTrending=product.IsTrending,
-                           CategoryId=category.CategoryId,
-                           CategoryName=category.CategoryName
-                       });
-            var selectedProducts = categoryProduct.Where(x => x.CategoryId.Equals(categoryId) && x.IsActive).ToList();
+                           ProductId = product.ProductId,
+                           ProductName = product.ProductName,
+                           ProductDes = product.ProductDes,
+                           ProductPrice = product.ProductPrice,
+                           ProductImage = product.ProductImage,
+                           IsAvailable = product.IsAvailable,
+                           IsTrending = product.IsTrending,
+                           CategoryId = category.CategoryId,
+                           CategoryName = category.CategoryName
+                           
+                       }).ToList();
+            var selectedProducts = categoryProduct.Where(x=>x.CategoryId==categoryId).ToList();
             if (categoryId == Guid.Parse("00000000-0000-0000-0000-000000000000"))
             {
-                return PartialView("_ProductListPartial", categoryProduct.Where(x=>x.IsActive==true));
+                return PartialView("_ProductListPartial", categoryProduct);
             }
             else
             {
@@ -109,6 +110,7 @@ namespace EcommerceManagement.Controllers
                     IsTrending = addProductDto.IsTrending,
                     CategoryRefId = addProductDto.CategoryRefId,
                     ProductImage = uniqueFileName,
+                    ProductCreated= DateTime.Now,
                 };
                 _ecommerceDbContext.Products.Add(product);
                 await _ecommerceDbContext.SaveChangesAsync();

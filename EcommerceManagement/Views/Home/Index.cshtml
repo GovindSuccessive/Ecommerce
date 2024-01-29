@@ -8,52 +8,401 @@
             .h200{
                 height:200px;
             }
+
+        :root {
+            --gradient: linear-gradient(to left top, #DD2476 10%, #FF512F 90%) !important;
+        }
+
+
+
+        .card {
+            background: #222;
+            border: 1px solid #dd2476;
+            color: rgba(250, 250, 250, 0.8);
+            margin-bottom: 2rem;
+        }
+
+        .btn {
+            border: 5px solid;
+            border-image-slice: 1;
+            background: var(--gradient) !important;
+            -webkit-background-clip: text !important;
+            -webkit-text-fill-color: transparent !important;
+            border-image-source: var(--gradient) !important;
+            text-decoration: none;
+            transition: all .4s ease;
+        }
+
+            .btn:hover, .btn:focus {
+                background: var(--gradient) !important;
+                -webkit-background-clip: none !important;
+                -webkit-text-fill-color: #fff !important;
+                border: 5px solid #fff !important;
+                box-shadow: #222 1px 0 10px;
+                text-decoration: underline;
+            }
+            .cssgr{
+            background: rgb(2,0,36);
+            background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 35%, rgba(0,212,255,1) 100%);
+            }
         </style>
     </head>
     <body>
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-lg-12">
-                <div id="carouselExampleDark" class="carousel carousel-dark slide" data-bs-ride="carousel">
-                    <div class="carousel-indicators">
-                        <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-                        <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="1" aria-label="Slide 2"></button>
-                        <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="2" aria-label="Slide 3"></button>
+    @* Top Crousole *@
+    <section>
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div id="carouselExampleDark" class="carousel carousel-dark slide" data-bs-ride="carousel">
+                                <div class="carousel-indicators">
+                                    <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                                    <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                                    <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                                </div>
+                                <div class="carousel-inner">
+                                    <div class="carousel-item active h200 text-center" data-bs-interval="10000">
+                                        <img src="../Content/images/cloth3.webp" class="d-block " alt="...">
+                                        <div class="carousel-caption d-none d-md-block">
+                                            <h5>First slide label</h5>
+                                            <p>Some representative placeholder content for the first slide.</p>
+                                        </div>
+                                    </div>
+                                    <div class="carousel-item h200 text-center" data-bs-interval="2000">
+                                        <img src="../Content/images/elec1.webp" class="d-block" alt="...">
+                                        <div class="carousel-caption d-none d-md-block">
+                                            <h5>Second slide label</h5>
+                                            <p>Some representative placeholder content for the second slide.</p>
+                                        </div>
+                                    </div>
+                                    <div class="carousel-item h200">
+                                        <img src="../Content/images/fun2.webp" class="d-block text-center" alt="...">
+                                        <div class="carousel-caption d-none d-md-block">
+                                            <h5>Third slide label</h5>
+                                            <p>Some representative placeholder content for the third slide.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Previous</span>
+                                </button>
+                                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Next</span>
+                                </button>
+                            </div>
+                        </div>
                     </div>
-                    <div class="carousel-inner">
-                        <div class="carousel-item active h200 text-center" data-bs-interval="10000">
-                            <img src="../Content/images/cloth3.webp" class="d-block " alt="...">
-                            <div class="carousel-caption d-none d-md-block">
-                                <h5>First slide label</h5>
-                                <p>Some representative placeholder content for the first slide.</p>
-                            </div>
-                        </div>
-                        <div class="carousel-item h200 text-center" data-bs-interval="2000">
-                            <img src="../Content/images/elec1.webp" class="d-block" alt="...">
-                            <div class="carousel-caption d-none d-md-block">
-                                <h5>Second slide label</h5>
-                                <p>Some representative placeholder content for the second slide.</p>
-                            </div>
-                        </div>
-                        <div class="carousel-item h200">
-                            <img src="../Content/images/fun2.webp" class="d-block text-center" alt="...">
-                            <div class="carousel-caption d-none d-md-block">
-                                <h5>Third slide label</h5>
-                                <p>Some representative placeholder content for the third slide.</p>
-                            </div>
-                        </div>
-                    </div>
-                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Previous</span>
-                    </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="next">
-                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Next</span>
-                    </button>
                 </div>
+           </section>
+
+     @* Product List *@
+    <section id="Productlist" class="bg-light pt-2 pb-5">
+                     <div class="text-end me-5 pt-5 fw-1000"><h2>Our Collections</h2></div>
+                    <div class="container-fluid  mt-5">
+                        <div class="row">
+                            @foreach (var x in Model)
+                            {
+
+                                <div class="col-md-3">
+                                    <div class="card" style="width: 18rem;">
+                                        <img src="/image/@x.ProductImage" class="card-img-top" style="height:16rem" alt="...">
+                                        <div class="card-body">
+                                            <h5 class="card-title">@x.ProductName</h5>
+                                            <h6 class="card-subtitle mb-2 text-muted">@x.CategoryName</h6>
+                                            <div class="d-flex justify-content-between mb-2">
+                                                <div class="fs-4 fw-500">Price</div>
+                                                <div class="fs-4 fw-500">@x.ProductPrice</div>
+                                            </div>                                           
+                                              <a href="#" class="btn mr-2 text-center w-100"><i class="fas fa-link pe-2 ps-2 text-center"></i> Add Cart</a>                                            
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+        }
+           </section>
+
+     @* About page *@
+    <section class="py-3 py-md-5 ">
+            <div class="container">
+                <div class="row gy-3 gy-md-4 gy-lg-0 align-items-lg-center">
+                    <div class="col-12 col-lg-6 col-xl-5">
+                    <img class="img-fluid rounded" loading="lazy" src="https://img.freepik.com/free-vector/teamwork-concept-landing-page_52683-20165.jpg?size=626&ext=jpg&ga=GA1.1.1036767008.1706037099&semt=ais" alt="About 1">
+                    </div>
+                    <div class="col-12 col-lg-6 col-xl-7">
+                        <div class="row justify-content-xl-center">
+                            <div class="col-12 col-xl-11">
+                                <h2 class="mb-3">Who Are We?</h2>
+                                <p class="lead fs-4 text-secondary mb-3">We help people to build incredible brands and superior products. Our perspective is to furnish outstanding captivating services.</p>
+                                <p class="mb-5">We are a fast-growing company, but we have never lost sight of our core values. We believe in collaboration, innovation, and customer satisfaction. We are always looking for new ways to improve our products and services.</p>
+                                <div class="row gy-4 gy-md-0 gx-xxl-5X">
+                                    <div class="col-12 col-md-6">
+                                        <div class="d-flex">
+                                            <div class="me-4 text-primary">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-gear-fill" viewBox="0 0 16 16">
+                                                    <path d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.464 1.464 0 0 1-2.105.872l-.31-.17c-1.283-.698-2.686.705-1.987 1.987l.169.311c.446.82.023 1.841-.872 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.464 1.464 0 0 1 .872 2.105l-.17.31c-.698 1.283.705 2.686 1.987 1.987l.311-.169a1.464 1.464 0 0 1 2.105.872l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.464 1.464 0 0 1 2.105-.872l.31.17c1.283.698 2.686-.705 1.987-1.987l-.169-.311a1.464 1.464 0 0 1 .872-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.464 1.464 0 0 1-.872-2.105l.17-.31c.698-1.283-.705-2.686-1.987-1.987l-.311.169a1.464 1.464 0 0 1-2.105-.872l-.1-.34zM8 10.93a2.929 2.929 0 1 1 0-5.86 2.929 2.929 0 0 1 0 5.858z" />
+                                                </svg>
+                                            </div>
+                                            <div>
+                                                <h2 class="h4 mb-3">Versatile Brand</h2>
+                                                <p class="text-secondary mb-0">We are crafting a digital method that subsists life across all mediums.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 col-md-6">
+                                        <div class="d-flex">
+                                            <div class="me-4 text-primary">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="currentColor" class="bi bi-fire" viewBox="0 0 16 16">
+                                                    <path d="M8 16c3.314 0 6-2 6-5.5 0-1.5-.5-4-2.5-6 .25 1.5-1.25 2-1.25 2C11 4 9 .5 6 0c.357 2 .5 4-2 6-1.25 1-2 2.729-2 4.5C2 14 4.686 16 8 16Zm0-1c-1.657 0-3-1-3-2.75 0-.75.25-2 1.25-3C6.125 10 7 10.5 7 10.5c-.375-1.25.5-3.25 2-3.5-.179 1-.25 2 1 3 .625.5 1 1.364 1 2.25C11 14 9.657 15 8 15Z" />
+                                                </svg>
+                                            </div>
+                                            <div>
+                                                <h2 class="h4 mb-3">Digital Agency</h2>
+                                                <p class="text-secondary mb-0">We believe in innovation by merging primary with elaborate ideas.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
+        </section>
+
+     @* Testimonial Page *@
+    <section class="bg-light m-5">
+            <div class="row d-flex justify-content-center p-5">
+                <div class="col-md-10 col-xl-8 text-center">
+                    <h3 class="mb-4">Testimonials</h3>
+                    <p class="mb-4 pb-2 mb-md-5 pb-md-0">
+                        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Fugit, error amet
+                        numquam iure provident voluptate esse quasi, veritatis totam voluptas nostrum
+                        quisquam eum porro a pariatur veniam.
+                    </p>
+                </div>
+            </div>
+
+            <div class="row text-center">
+                <div class="col-md-4 mb-5 mb-md-0">
+                    <div class="d-flex justify-content-center mb-4">
+                        <img src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(1).webp"
+                             class="rounded-circle shadow-1-strong" width="150" height="150" />
+                    </div>
+                    <h5 class="mb-3">Maria Smantha</h5>
+                    <h6 class="text-primary mb-3">Web Developer</h6>
+                    <p class="px-xl-3">
+                        <i class="fas fa-quote-left pe-2"></i>Lorem ipsum dolor sit amet, consectetur
+                        adipisicing elit. Quod eos id officiis hic tenetur quae quaerat ad velit ab hic
+                        tenetur.
+                    </p>
+                    <ul class="list-unstyled d-flex justify-content-center mb-0">
+                        <li>
+                            <i class="fas fa-star fa-sm text-warning"></i>
+                        </li>
+                        <li>
+                            <i class="fas fa-star fa-sm text-warning"></i>
+                        </li>
+                        <li>
+                            <i class="fas fa-star fa-sm text-warning"></i>
+                        </li>
+                        <li>
+                            <i class="fas fa-star fa-sm text-warning"></i>
+                        </li>
+                        <li>
+                            <i class="fas fa-star-half-alt fa-sm text-warning"></i>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-4 mb-5 mb-md-0">
+                    <div class="d-flex justify-content-center mb-4">
+                        <img src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(2).webp"
+                             class="rounded-circle shadow-1-strong" width="150" height="150" />
+                    </div>
+                    <h5 class="mb-3">Lisa Cudrow</h5>
+                    <h6 class="text-primary mb-3">Graphic Designer</h6>
+                    <p class="px-xl-3">
+                        <i class="fas fa-quote-left pe-2"></i>Ut enim ad minima veniam, quis nostrum
+                        exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid commodi.
+                    </p>
+                    <ul class="list-unstyled d-flex justify-content-center mb-0">
+                        <li>
+                            <i class="fas fa-star fa-sm text-warning"></i>
+                        </li>
+                        <li>
+                            <i class="fas fa-star fa-sm text-warning"></i>
+                        </li>
+                        <li>
+                            <i class="fas fa-star fa-sm text-warning"></i>
+                        </li>
+                        <li>
+                            <i class="fas fa-star fa-sm text-warning"></i>
+                        </li>
+                        <li>
+                            <i class="fas fa-star fa-sm text-warning"></i>
+                        </li>
+                    </ul>
+                </div>
+                <div class="col-md-4 mb-0">
+                    <div class="d-flex justify-content-center mb-4">
+                        <img src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(9).webp"
+                             class="rounded-circle shadow-1-strong" width="150" height="150" />
+                    </div>
+                    <h5 class="mb-3">John Smith</h5>
+                    <h6 class="text-primary mb-3">Marketing Specialist</h6>
+                    <p class="px-xl-3">
+                        <i class="fas fa-quote-left pe-2"></i>At vero eos et accusamus et iusto odio
+                        dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti.
+                    </p>
+                    <ul class="list-unstyled d-flex justify-content-center mb-0">
+                        <li>
+                            <i class="fas fa-star fa-sm text-warning"></i>
+                        </li>
+                        <li>
+                            <i class="fas fa-star fa-sm text-warning"></i>
+                        </li>
+                        <li>
+                            <i class="fas fa-star fa-sm text-warning"></i>
+                        </li>
+                        <li>
+                            <i class="fas fa-star fa-sm text-warning"></i>
+                        </li>
+                        <li>
+                            <i class="far fa-star fa-sm text-warning"></i>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        
+    @* Footer Section *@
+    <!-- Remove the container if you want to extend the Footer to full width. -->
+    <div class="container-fluid my-5">
+
+        <!-- Footer -->
+        <footer class="text-center text-lg-start text-white"
+                style="background-color: #1c2331">
+            <!-- Section: Social media -->
+            <section class="d-flex justify-content-between p-4"
+                     style="background-color: #6351ce">
+                <!-- Left -->
+                <div class="me-5">
+                    <span>Get connected with us on social networks:</span>
+                </div>
+                <!-- Left -->
+                <!-- Right -->
+                <div>
+                    <a href="" class="text-white me-4">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="" class="text-white me-4">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="" class="text-white me-4">
+                        <i class="fab fa-google"></i>
+                    </a>
+                    <a href="" class="text-white me-4">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="" class="text-white me-4">
+                        <i class="fab fa-linkedin"></i>
+                    </a>
+                    <a href="" class="text-white me-4">
+                        <i class="fab fa-github"></i>
+                    </a>
+                </div>
+                <!-- Right -->
+            </section>
+            <!-- Section: Social media -->
+            <!-- Section: Links  -->
+            <section class="">
+                <div class="container text-center text-md-start mt-5">
+                    <!-- Grid row -->
+                    <div class="row mt-3">
+                        <!-- Grid column -->
+                        <div class="col-md-3 col-lg-4 col-xl-3 mx-auto mb-4">
+                            <!-- Content -->
+                            <h6 class="text-uppercase fw-bold">Company name</h6>
+                            <hr class="mb-4 mt-0 d-inline-block mx-auto"
+                                style="width: 60px; background-color: #7c4dff; height: 2px" />
+                            <p>
+                                Here you can use rows and columns to organize your footer
+                                content. Lorem ipsum dolor sit amet, consectetur adipisicing
+                                elit.
+                            </p>
+                        </div>
+                        <!-- Grid column -->
+                        <!-- Grid column -->
+                        <div class="col-md-2 col-lg-2 col-xl-2 mx-auto mb-4">
+                            <!-- Links -->
+                            <h6 class="text-uppercase fw-bold">Products</h6>
+                            <hr class="mb-4 mt-0 d-inline-block mx-auto"
+                                style="width: 60px; background-color: #7c4dff; height: 2px" />
+                            <p>
+                                <a href="#!" class="text-white">MDBootstrap</a>
+                            </p>
+                            <p>
+                                <a href="#!" class="text-white">MDWordPress</a>
+                            </p>
+                            <p>
+                                <a href="#!" class="text-white">BrandFlow</a>
+                            </p>
+                            <p>
+                                <a href="#!" class="text-white">Bootstrap Angular</a>
+                            </p>
+                        </div>
+                        <!-- Grid column -->
+                        <!-- Grid column -->
+                        <div class="col-md-3 col-lg-2 col-xl-2 mx-auto mb-4">
+                            <!-- Links -->
+                            <h6 class="text-uppercase fw-bold">Useful links</h6>
+                            <hr class="mb-4 mt-0 d-inline-block mx-auto"
+                                style="width: 60px; background-color: #7c4dff; height: 2px" />
+                            <p>
+                                <a href="#!" class="text-white">Your Account</a>
+                            </p>
+                            <p>
+                                <a href="#!" class="text-white">Become an Affiliate</a>
+                            </p>
+                            <p>
+                                <a href="#!" class="text-white">Shipping Rates</a>
+                            </p>
+                            <p>
+                                <a href="#!" class="text-white">Help</a>
+                            </p>
+                        </div>
+                        <!-- Grid column -->
+                        <!-- Grid column -->
+                        <div class="col-md-4 col-lg-3 col-xl-3 mx-auto mb-md-0 mb-4">
+                            <!-- Links -->
+                            <h6 class="text-uppercase fw-bold">Contact</h6>
+                            <hr class="mb-4 mt-0 d-inline-block mx-auto"
+                                style="width: 60px; background-color: #7c4dff; height: 2px" />
+                            <p><i class="fas fa-home mr-3"></i> New York, NY 10012, US</p>
+                            <p><i class="fas fa-envelope mr-3"></i> info@example.com</p>
+                            <p><i class="fas fa-phone mr-3"></i> + 01 234 567 88</p>
+                            <p><i class="fas fa-print mr-3"></i> + 01 234 567 89</p>
+                        </div>
+                        <!-- Grid column -->
+                    </div>
+                    <!-- Grid row -->
+                </div>
+            </section>
+            <!-- Section: Links  -->
+            <!-- Copyright -->
+            <div class="text-center p-3"
+                 style="background-color: rgba(0, 0, 0, 0.2)">
+                © 2020 Copyright:
+                <a class="text-white" href="https://mdbootstrap.com/">MDBootstrap.com</a>
+            </div>
+            <!-- Copyright -->
+        </footer>
+        <!-- Footer -->
+
+    </div>
+    <!-- End of .container -->
+
     </body>
 </html>

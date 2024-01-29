@@ -4,46 +4,113 @@
     ViewData["Title"] = "GetAll";
 }
 
-@if (Model != null)
-{
+<html>
+    <head>
+        <style>
+        :root {
+            --gradient: linear-gradient(to left top, #DD2476 10%, #FF512F 90%) !important;
+        }
+
+    
+
+        .card {
+            background: #222;
+            border: 1px solid #dd2476;
+            color: rgba(250, 250, 250, 0.8);
+            margin-bottom: 2rem;
+        }
+
+        .btn {
+            border: 5px solid;
+            border-image-slice: 1;
+            background: var(--gradient) !important;
+            -webkit-background-clip: text !important;
+            -webkit-text-fill-color: transparent !important;
+            border-image-source: var(--gradient) !important;
+            text-decoration: none;
+            transition: all .4s ease;
+        }
+
+            .btn:hover, .btn:focus {
+                background: var(--gradient) !important;
+                -webkit-background-clip: none !important;
+                -webkit-text-fill-color: #fff !important;
+                border: 5px solid #fff !important;
+                box-shadow: #222 1px 0 10px;
+                text-decoration: underline;
+            }
+        </style>
+    </head>
+    <boyd>
+    @if (Model != null)
+    {
+        @*         <table class="table">
+    <thead>
+    <tr>
+    <th>Product Name</th>
+    <th>Product Description</th>
+    <th>Product Price</th>
+    <th>Is Available</th>
+    <th>Is Trending</th>
+    <th>Category Name</th>
+    <th>Action</th>
+    </tr>
+    </thead>
+    <tbody>
     @foreach (var product in Model)
     {
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Product Name</th>
-                    <th>Product Description</th>
-                    <th>Product Price</th>
-                    <th>Is Available</th>
-                    <th>Is Trending</th>
-                    <th>Category Name</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>@product.ProductName</td>
-                    <td>@product.ProductDes</td>
-                    <td>@product.ProductPrice</td>
-                    <td>@product.IsAvailable</td>
-                    <td>@product.IsTrending</td>
-                    <td>@product.CategoryName</td>
-                    <td>
-                        <a class="btn btn-primary" href="/Product/Update/@product.ProductId">Edit</a>
-                        <a class="btn btn-danger" href="/Product/Deactive/@product.ProductId">Deactive</a>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+    <tr>
+    <td>@product.ProductName</td>
+    <td>@product.ProductDes</td>
+    <td>@product.ProductPrice</td>
+    <td>@product.IsAvailable</td>
+    <td>@product.IsTrending</td>
+    <td>@product.CategoryName</td>
+    <td>
+    <a class="btn btn-primary" href="/Product/Update/@product.ProductId">Edit</a>
+    <a class="btn btn-danger" href="/Product/Deactive/@product.ProductId">Deactive</a>
+    </td>
+    </tr>
     }
-}
-else
-{
-    <div class="d-flex justify-content-center  align-items-center vh-100">
-        <div class=" card p-5 w-25">
-            <div class="card-title text-center text-danger fs-5 fw-600">No Product are Persents</div>
-            <div class="card-body text-center"><a class="btn btn-success pl-2 pr-2" href="/Product/AddProduct">Add Product</a></div>
+    </tbody>
+    </table> *@
+            <div class="container  mt-4">
+                <div class="row">
+        @foreach (var x in Model)
+        {
+
+                    <div class="col-md-3">
+                        <div class="card" style="width: 16rem;">
+                            <img src="/image/@x.ProductImage" class="card-img-top" style="height:12rem" alt="...">
+                            <div class="card-body">
+                                <h5 class="card-title">@x.ProductName</h5>
+                                <h6 class="card-subtitle mb-2 text-muted">@x.CategoryName</h6>
+                                <div class="d-flex justify-content-between mb-2">
+                                   <div class="fs-4 fw-500">Price</div>
+                                    <div class="fs-4 fw-500" >@x.ProductPrice</div>
+                                </div>
+
+                               <div class="d-flex justify-content-between">
+                                    <a href="/Product/Update/@x.ProductId" class="btn mr-2 text-center"><i class="fas fa-link pe-2 ps-2 text-center"></i> Edit</a>
+                                    <a href="/Product/Deactive/@x.ProductId" class="btn "><i class="fab fa-github"></i> Deactive</a>
+                               </div>
+                            </div>
+                        </div>
+                    </div>
+        }
+                </div>
+            </div>
+    }
+    else
+    {
+        <div class="d-flex justify-content-center  align-items-center vh-100">
+            <div class=" card p-5 w-25">
+                <div class="card-title text-center text-danger fs-5 fw-600">No Product are Persents</div>
+                <div class="card-body text-center"><a class="btn btn-success pl-2 pr-2" href="/Product/AddProduct">Add Product</a></div>
+            </div>
         </div>
-    </div>
-}
+    }
+    </boyd>
+</html>
+
 

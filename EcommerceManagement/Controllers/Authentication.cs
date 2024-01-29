@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EcommerceManagement.Controllers
 {
-    public class Authentication: Controller
+    public class Authentication : Controller
     {
         private readonly SignInManager<UserModel> _signInManager;
         private readonly UserManager<UserModel> _userManager;
@@ -24,7 +24,10 @@ namespace EcommerceManagement.Controllers
 
         public IActionResult Login()
         {
-            
+            if (_signInManager.IsSignedIn(User))
+            {
+                return RedirectToAction("Index", "Home");
+            }
             return View();
         }
 
@@ -42,7 +45,7 @@ namespace EcommerceManagement.Controllers
                     {
                         return RedirectToAction("Index", "Admin");
                     }
-                    if(User.IsInRole("User"))
+                    if (User.IsInRole("User"))
                     {
                         return RedirectToAction("Index", "Home");
                     }
@@ -70,11 +73,11 @@ namespace EcommerceManagement.Controllers
                     LastName = model.LastName,
                     UserName = model.Email,
                     Email = model.Email,
-                    PhoneNo=model.PhoneNo,
-                    Address= model.Address,
+                    PhoneNo = model.PhoneNo,
+                    Address = model.Address,
                     Password = model.Password,
                     ConfirmPassword = model.ConfirmPassword,
-                   
+
                 };
 
                 var result = await _userManager.CreateAsync(user, model.Password!);
@@ -86,8 +89,8 @@ namespace EcommerceManagement.Controllers
                         return RedirectToAction("GetAllUser", "Authentication");
                     }
                     await _userManager.AddToRoleAsync(user, Roles.User.ToString());
-                    await _signInManager.SignInAsync(user,isPersistent: false);
-                    return RedirectToAction("Index", "Home");                   
+                    await _signInManager.SignInAsync(user, isPersistent: false);
+                    return RedirectToAction("Index", "Home");
                 }
                 foreach (var error in result.Errors)
                 {
@@ -100,10 +103,10 @@ namespace EcommerceManagement.Controllers
         [HttpGet]
         public IActionResult GetAllUser()
         {
-            var users =_userManager.Users;
+            var users = _userManager.Users;
             return View(users);
         }
-
+/*
         [HttpGet]
         public async Task<IActionResult> Update(string id, List<string> userRoles)
         {
@@ -125,8 +128,8 @@ namespace EcommerceManagement.Controllers
                 Address = user.Address,
                 PhoneNo = user.PhoneNo,
                 Password = user.Password,
-                Claims=userClaims.Select(c=>c.Value).ToList(),
-                Roles= userRoles
+                Claims = userClaims.Select(c => c.Value).ToList(),
+
             };
 
 
@@ -144,7 +147,7 @@ namespace EcommerceManagement.Controllers
         public async Task<IActionResult> DeleteProduct(Guid id)
         {
 
-        }
+        }*/
 
 
         [HttpGet]
