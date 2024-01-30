@@ -1,4 +1,4 @@
-﻿@model List<EcommerceManagement.Models.Dto.ProductCategoryDto>
+﻿@model List<EcommerceManagement.Models.Domain.ProductModel>
 
 @{
     ViewData["Title"] = "GetAll";
@@ -40,51 +40,30 @@
                 text-decoration: underline;
             }
         </style>
+  
     </head>
     <boyd>
-    @if (Model != null)
-    {
-        @*         <table class="table">
-    <thead>
-    <tr>
-    <th>Product Name</th>
-    <th>Product Description</th>
-    <th>Product Price</th>
-    <th>Is Available</th>
-    <th>Is Trending</th>
-    <th>Category Name</th>
-    <th>Action</th>
-    </tr>
-    </thead>
-    <tbody>
-    @foreach (var product in Model)
-    {
-    <tr>
-    <td>@product.ProductName</td>
-    <td>@product.ProductDes</td>
-    <td>@product.ProductPrice</td>
-    <td>@product.IsAvailable</td>
-    <td>@product.IsTrending</td>
-    <td>@product.CategoryName</td>
-    <td>
-    <a class="btn btn-primary" href="/Product/Update/@product.ProductId">Edit</a>
-    <a class="btn btn-danger" href="/Product/Deactive/@product.ProductId">Deactive</a>
-    </td>
-    </tr>
-    }
-    </tbody>
-    </table> *@
-            <div class="container  mt-4">
+    <div class="input-group d-flex justify-content-end mt-2">
+        <div class="form-outline mt-2" data-mdb-input-init>
+            <input type="search" id="form1" class="form-control" />
+            <label class="form-label" for="form1">Search</label>
+        </div>
+       <div class="mt-2 ms-2">
+            <i class="bi bi-search btn text-white bg-primary" ></i>
+       </div>
+    </div>
+       @if(Model.Count>0 && Model.Any()){
+          <div class="container  mt-4">
                 <div class="row">
-        @foreach (var x in Model)
-        {
+                   @foreach (var x in Model)
+                   {
 
-                    <div class="col-md-3">
+                      <div class="col-md-3">
                         <div class="card" style="width: 16rem;">
                             <img src="/image/@x.ProductImage" class="card-img-top" style="height:12rem" alt="...">
                             <div class="card-body">
                                 <h5 class="card-title">@x.ProductName</h5>
-                                <h6 class="card-subtitle mb-2 text-muted">@x.CategoryName</h6>
+                                <h6 class="card-subtitle mb-2 text-muted">@x.Category.CategoryName</h6>
                                 <div class="d-flex justify-content-between mb-2">
                                    <div class="fs-4 fw-500">Price</div>
                                     <div class="fs-4 fw-500" >@x.ProductPrice</div>
@@ -96,10 +75,11 @@
                                </div>
                             </div>
                         </div>
-                    </div>
-        }
+                      </div>
+                   }
                 </div>
-            </div>
+          </div>
+         
     }
     else
     {

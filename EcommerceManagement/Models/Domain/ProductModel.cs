@@ -21,6 +21,7 @@ namespace EcommerceManagement.Models.Domain
 
         public bool IsTrending { get; set; }
 
+        [DefaultValue(true)]
         public bool IsActive { get; set; }
 
         public DateTime ProductCreated { get; set; }

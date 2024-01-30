@@ -20,7 +20,7 @@ namespace EcommerceManagement.Models.Dto
 
         public string ProductImage { get; set; }
 
-        [DefaultValue(true)]
+        
         public bool IsActive {  get; set; }
 
         public DateTime ProductCreated {  get; set; }

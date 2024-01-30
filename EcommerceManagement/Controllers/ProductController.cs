@@ -22,7 +22,7 @@ namespace EcommerceManagement.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            var productList = await _ecommerceDbContext.Products.ToListAsync();
+            /*var productList = await _ecommerceDbContext.Products.ToListAsync();
             var categoryList =await  _ecommerceDbContext.Categories.ToListAsync();
             var categoryProduct = productList.Join(// outer sequence 
                        categoryList,  // inner sequence 
@@ -41,37 +41,50 @@ namespace EcommerceManagement.Controllers
                            IsTrending = product.IsTrending,
                            CategoryId = category.CategoryId,
                            CategoryName = category.CategoryName
-                       }).OrderByDescending(x=>x.ProductCreated).ToList();
-            return View(categoryProduct);
+                       }).OrderByDescending(x=>x.ProductCreated).ToList();*/
+            ViewBag.CategoryList = await _ecommerceDbContext.Categories.ToListAsync();
+            return View();
+        }
+
+        [HttpGet("id")]
+        public async Task<IActionResult> GetAllByCategory(Guid categoryId)
+        {
+            var product =  await _ecommerceDbContext.Products.Include(x => x.Category).ToListAsync();
+            if(categoryId== Guid.Parse("00000000-0000-0000-0000-000000000000"))
+            {
+                return PartialView("_GetAllPartial",product);
+            }
+            return PartialView("_GetAllPartial",product.Where(x => x.CategoryRefId == categoryId).ToList());
         }
 
         [HttpGet]
 
         public async Task<IActionResult> GetProductsByCategory(Guid categoryId)
         {
-            var productList = await _ecommerceDbContext.Products.ToListAsync();
-            var categoryList = await _ecommerceDbContext.Categories.ToListAsync();
-            var categoryProduct = productList.Join(// outer sequence 
-                       categoryList,  // inner sequence 
-                       product => product.CategoryRefId,   // outerKeySelector
-                       category => category.CategoryId, // innerKeySelector
-                       (product, category) => new ProductCategoryDto // result selector
-                       {
-                           ProductId = product.ProductId,
-                           ProductName = product.ProductName,
-                           ProductDes = product.ProductDes,
-                           ProductPrice = product.ProductPrice,
-                           ProductImage = product.ProductImage,
-                           IsAvailable = product.IsAvailable,
-                           IsTrending = product.IsTrending,
-                           CategoryId = category.CategoryId,
-                           CategoryName = category.CategoryName
-                           
-                       }).ToList();
-            var selectedProducts = categoryProduct.Where(x=>x.CategoryId==categoryId).ToList();
+            var productList = await _ecommerceDbContext.Products.Include(x => x.Category).Where(x=>x.IsActive == true).Take(100).ToListAsync();
+            /* var categoryList = await _ecommerceDbContext.Categories.ToListAsync();
+             var categoryProduct =  productList.Join(// outer sequence 
+                        categoryList,  // inner sequence 
+                        product => product.CategoryRefId,   // outerKeySelector
+                        category => category.CategoryId, // innerKeySelector
+                        (product, category) => new ProductCategoryDto // result selector
+                        {
+                            ProductId = product.ProductId,
+                            ProductName = product.ProductName,
+                            ProductDes = product.ProductDes,
+                            ProductPrice = product.ProductPrice,
+                            ProductImage = product.ProductImage,
+                            IsAvailable = product.IsAvailable,
+                            IsTrending = product.IsTrending,
+                            CategoryId = category.CategoryId,
+                            CategoryName = category.CategoryName
+
+                        }).Where(x=>x.IsActive== true).Take(100).ToList();*/
+            TempData["AdminSelectedCategoryId"] = categoryId;
+            var selectedProducts = productList.Where(x=>x.Category.CategoryId==categoryId).ToList();
             if (categoryId == Guid.Parse("00000000-0000-0000-0000-000000000000"))
             {
-                return PartialView("_ProductListPartial", categoryProduct);
+                return PartialView("_ProductListPartial", productList);
             }
             else
             {
@@ -84,6 +97,10 @@ namespace EcommerceManagement.Controllers
         public async Task<IActionResult> AddProduct()
         {
             ViewBag.CategoryList = await _ecommerceDbContext.Categories.ToListAsync();
+            if (TempData.TryGetValue("AdminSelectedCategoryId", out var adminSelectedCategoryId))
+            {
+                ViewBag.DefaultCategoryId = (Guid)adminSelectedCategoryId;
+            }
             return View();
         }
 
@@ -106,6 +123,7 @@ namespace EcommerceManagement.Controllers
                     ProductName = addProductDto.ProductName,
                     ProductPrice = addProductDto.ProductPrice,
                     ProductDes = addProductDto.ProductDes!,
+                    IsActive=true,
                     IsAvailable = addProductDto.IsAvailable,
                     IsTrending = addProductDto.IsTrending,
                     CategoryRefId = addProductDto.CategoryRefId,
