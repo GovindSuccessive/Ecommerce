@@ -20,5 +20,10 @@ namespace EcommerceManagement.Controllers
             ViewBag.CategoryList=await _ecommerceDbContext.Categories.ToListAsync();
             return View();
         }
+
+
+
+
+
     }
 }

@@ -23,28 +23,11 @@ namespace EcommerceManagement.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var productList = await _ecommerceDbContext.Products.ToListAsync();
-            var categoryList = await _ecommerceDbContext.Categories.ToListAsync();
-            var categoryProduct = productList.Join(// outer sequence 
-                       categoryList,  // inner sequence 
-                       product => product.CategoryRefId,   // outerKeySelector
-                       category => category.CategoryId, // innerKeySelector
-                       (product, category) => new ProductCategoryDto // result selector
-                       {
-                           ProductId = product.ProductId,
-                           ProductName = product.ProductName,
-                           ProductDes = product.ProductDes,
-                           ProductPrice = product.ProductPrice,
-                           ProductImage = product.ProductImage,
-                           IsAvailable = product.IsAvailable,
-                           IsActive = product.IsActive,
-                           ProductCreated = product.ProductCreated,
-                           IsTrending = product.IsTrending,
-                           CategoryId = category.CategoryId,
-                           CategoryName = category.CategoryName
-                       }).OrderByDescending(x => x.ProductCreated).ToList();
-            return View(categoryProduct);
+            ViewBag.CategoryList = await _ecommerceDbContext.Categories.ToListAsync();
+            var productList = await _ecommerceDbContext.Products.Include(x=>x.Category).Where(x=>x.IsActive==true).OrderByDescending(x=>x.IsTrending).Take(10).ToListAsync();
+            return View(productList);
         }
+       
 
 
     }

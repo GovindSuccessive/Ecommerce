@@ -6,12 +6,16 @@
 }
 <html>
     <head>
-        <style></style>
+        <style>
+        .mt70 {
+            margin-top: 70px;
+        }
+        </style>
     </head>
     <body>
-    <h3 class="m-3">All Products</h3>
+    <h3 class="m-3 mt70">All Products</h3>
 
-    <div class="d-flex justify-content-between">
+    <div class="d-flex mt70 justify-content-between">
         <div>
             <select class="form-select " style="width:10rem" id="categoryId">
                 @if (CategoryList != null && CategoryList.Count > 0)

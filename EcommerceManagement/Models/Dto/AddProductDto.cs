@@ -17,6 +17,7 @@ namespace EcommerceManagement.Models.Dto
         [DefaultValue(true)]
         public bool IsAvailable { get; set; }
 
+        [DefaultValue(false)]
         public bool IsTrending { get; set; }
 
         [DefaultValue(true)]

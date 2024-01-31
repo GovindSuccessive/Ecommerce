@@ -3,58 +3,69 @@
     ViewData["Title"] = "All USers";
 }
 
-<h1>All Users</h1>
-
-@if (Model.Any())
-{
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Address</th>
-                <th>Phone no</th>
-                <th>PassWord</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var x in Model)
-            {
-                <tr>
-                    <td>@x.Id</td>
-                    <td>@x.FirstName @x.LastName</td>
-                
-                    <td>@x.Email</td>
-              
-                    <td>@x.Address</td>
-               
-                    <td>@x.PhoneNo</td>
-               
-                    <td>@x.Password</td>
-                    <td>
-                        <a class="btn btn-primary" asp-action="UpdateProduct" asp-controller="Authenication" asp-route-id="@x.Id">Edit</a>
-                        <a class="btn btn-danger" asp-action="DeleteProduct" asp-controller="Authenication" asp-route-id="@x.Id">Deactive</a>
-                    </td>
-                </tr>
+<html>
+    <head>
+        <style>
+            .mt70{
+                margin-top:70px;
             }
-        </tbody>
-    </table>
-}
-else
-{
-    <div class="card">
-        <div class="card-header">
-            No Uses created yet
+        </style>
+    </head>
+    <body>
+    <h1 class="mt70">All Users</h1>
+
+    @if (Model.Any())
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Address</th>
+                    <th>Phone no</th>
+                    <th>PassWord</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var x in Model)
+                {
+                    <tr>
+                        <td>@x.Id</td>
+                        <td>@x.FirstName @x.LastName</td>
+
+                        <td>@x.Email</td>
+
+                        <td>@x.Address</td>
+
+                        <td>@x.PhoneNo</td>
+
+                        <td>@x.Password</td>
+                        <td>
+                            <a class="btn btn-primary" asp-action="UpdateProduct" asp-controller="Authenication" asp-route-id="@x.Id">Edit</a>
+                            <a class="btn btn-danger" asp-action="DeleteProduct" asp-controller="Authenication" asp-route-id="@x.Id">Deactive</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div class="card">
+            <div class="card-header">
+                No Uses created yet
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">
+                    Use the button below to create a user
+                </h5>
+                <a class="btn btn-primary" style="width:auto" asp-controller="Authentication" asp-action="Register">
+                    Add new users
+                </a>
+            </div>
         </div>
-        <div class="card-body">
-            <h5 class="card-title">
-                Use the button below to create a user
-            </h5>
-            <a class="btn btn-primary" style="width:auto" asp-controller="Authentication" asp-action="Register">
-                Add new users
-            </a>
-        </div>
-    </div>
-}
+    }
+    </body>
+</html>

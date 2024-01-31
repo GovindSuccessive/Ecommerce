@@ -22,26 +22,6 @@ namespace EcommerceManagement.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            /*var productList = await _ecommerceDbContext.Products.ToListAsync();
-            var categoryList =await  _ecommerceDbContext.Categories.ToListAsync();
-            var categoryProduct = productList.Join(// outer sequence 
-                       categoryList,  // inner sequence 
-                       product => product.CategoryRefId,   // outerKeySelector
-                       category => category.CategoryId, // innerKeySelector
-                       (product, category) => new ProductCategoryDto // result selector
-                       {
-                           ProductId = product.ProductId,
-                           ProductName = product.ProductName,
-                           ProductDes = product.ProductDes,
-                           ProductPrice = product.ProductPrice,
-                           ProductImage = product.ProductImage,
-                           IsAvailable = product.IsAvailable,
-                           IsActive = product.IsActive,
-                           ProductCreated=product.ProductCreated,
-                           IsTrending = product.IsTrending,
-                           CategoryId = category.CategoryId,
-                           CategoryName = category.CategoryName
-                       }).OrderByDescending(x=>x.ProductCreated).ToList();*/
             ViewBag.CategoryList = await _ecommerceDbContext.Categories.ToListAsync();
             return View();
         }
@@ -61,25 +41,8 @@ namespace EcommerceManagement.Controllers
 
         public async Task<IActionResult> GetProductsByCategory(Guid categoryId)
         {
-            var productList = await _ecommerceDbContext.Products.Include(x => x.Category).Where(x=>x.IsActive == true).Take(100).ToListAsync();
-            /* var categoryList = await _ecommerceDbContext.Categories.ToListAsync();
-             var categoryProduct =  productList.Join(// outer sequence 
-                        categoryList,  // inner sequence 
-                        product => product.CategoryRefId,   // outerKeySelector
-                        category => category.CategoryId, // innerKeySelector
-                        (product, category) => new ProductCategoryDto // result selector
-                        {
-                            ProductId = product.ProductId,
-                            ProductName = product.ProductName,
-                            ProductDes = product.ProductDes,
-                            ProductPrice = product.ProductPrice,
-                            ProductImage = product.ProductImage,
-                            IsAvailable = product.IsAvailable,
-                            IsTrending = product.IsTrending,
-                            CategoryId = category.CategoryId,
-                            CategoryName = category.CategoryName
+            var productList = await _ecommerceDbContext.Products.Include(x => x.Category).Where(x=>x.IsActive == true).OrderByDescending(x=>x.IsTrending).Take(100).ToListAsync();
 
-                        }).Where(x=>x.IsActive== true).Take(100).ToList();*/
             TempData["AdminSelectedCategoryId"] = categoryId;
             var selectedProducts = productList.Where(x=>x.Category.CategoryId==categoryId).ToList();
             if (categoryId == Guid.Parse("00000000-0000-0000-0000-000000000000"))
@@ -91,6 +54,17 @@ namespace EcommerceManagement.Controllers
                 return PartialView("_ProductListPartial", selectedProducts);
             }
 
+        }
+
+        [HttpPost]
+        public IActionResult Search(string query)
+        {
+            // Retrieve products based on the search query
+            var products = _ecommerceDbContext.Products
+                .Where(p => string.IsNullOrEmpty(query) || p.ProductName.Contains(query))
+                .ToList();
+
+            return RedirectToAction("GetProductsByCategory"); // Create a partial view for search results
         }
 
         [HttpGet]

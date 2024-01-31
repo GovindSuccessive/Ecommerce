@@ -19,6 +19,7 @@ namespace EcommerceManagement.Models.Domain
         [DefaultValue(true)]
         public bool IsAvailable { get; set; }
 
+        [DefaultValue(false)]
         public bool IsTrending { get; set; }
 
         [DefaultValue(true)]
