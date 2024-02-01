@@ -13,6 +13,7 @@ namespace EcommerceManagement.Models.Dto
             Roles= new List<string>();
         }
 
+        public Guid Id { get; set; }
         public string FirstName { get; set; }
 
         public string LastName { get; set; }
@@ -22,14 +23,23 @@ namespace EcommerceManagement.Models.Dto
         [Required][EmailAddress]
         public string Email { get; set; }
 
-        [Required][PasswordPropertyText]
-        public string Password { get; set; }
+
+        public string? OldPassword { get; set; }
+
+       
+        [DataType(DataType.Password)]
+        public string? NewPassword { get; set; }
+
+        [Compare("NewPassword", ErrorMessage = "Passwords don't match.")]
+        [Display(Name = "Confirm Password")]
+        [DataType(DataType.Password)]
+        public string? ConfirmPassword { get; set; }
 
         public string Address { get; set; }
 
-        public List<string> Claims { get; set; }
+        public IList<string> Claims { get; set; }
 
-        public List<string> Roles {  get; set; }
+        public IList<string> Roles {  get; set; }
 
     }
 }

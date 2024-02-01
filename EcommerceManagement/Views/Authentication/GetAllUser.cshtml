@@ -43,8 +43,15 @@
 
                         <td>@x.Password</td>
                         <td>
-                            <a class="btn btn-primary" asp-action="UpdateProduct" asp-controller="Authenication" asp-route-id="@x.Id">Edit</a>
-                            <a class="btn btn-danger" asp-action="DeleteProduct" asp-controller="Authenication" asp-route-id="@x.Id">Deactive</a>
+                                <a class="btn btn-primary" asp-action="UpdateUsers" asp-controller="Authentication" asp-route-id="@x.Id">Edit</a>
+                            @if (x.IsActivate)
+                            {
+                                <a class="btn btn-danger" asp-action="Deactive" asp-controller="Authentication" asp-route-id="@x.Id">Deactivate</a>
+                            }
+                            else
+                            {
+                                <a class="btn btn-success" asp-action="Activate" asp-controller="Authentication" asp-route-id="@x.Id">Activate</a>
+                            }
                         </td>
                     </tr>
                 }

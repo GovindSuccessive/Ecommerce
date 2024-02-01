@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace EcommerceManagement.Models.Domain
 {
-    public class UserModel:IdentityUser
+    public class UserModel : IdentityUser
     {
         [Key]
         public int UserId { get; set; }
@@ -20,12 +21,15 @@ namespace EcommerceManagement.Models.Domain
         public string Email { get; set; }
 
         [DataType(DataType.PhoneNumber)]
-        public string? PhoneNo {  get; set; }
+        public string? PhoneNo { get; set; }
 
         [DataType(DataType.MultilineText)]
-        public string? Address { get; set; } 
+        public string? Address { get; set; }
 
-        public string? Role { get; set; }
+        public string? Role { get; set; } = "User";
+
+        [DefaultValue(true)]
+        public bool IsActivate {  get; set; }
 
 
         [Required]

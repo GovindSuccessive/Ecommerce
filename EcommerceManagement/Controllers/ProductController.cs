@@ -39,12 +39,16 @@ namespace EcommerceManagement.Controllers
 
         [HttpGet]
 
-        public async Task<IActionResult> GetProductsByCategory(Guid categoryId)
+        public async Task<IActionResult> GetProductsByCategory(Guid categoryId,string abc)
         {
             var productList = await _ecommerceDbContext.Products.Include(x => x.Category).Where(x=>x.IsActive == true).OrderByDescending(x=>x.IsTrending).Take(100).ToListAsync();
 
             TempData["AdminSelectedCategoryId"] = categoryId;
-            var selectedProducts = productList.Where(x=>x.Category.CategoryId==categoryId).ToList();
+            var selectedProducts = productList.Where(x => x.Category.CategoryId == categoryId).ToList();
+            if (abc != null)
+            {
+               selectedProducts = productList.Where(x => x.Category.CategoryId == categoryId &&  x.ProductName.ToLower().Contains(abc.ToLower())).ToList();
+            }
             if (categoryId == Guid.Parse("00000000-0000-0000-0000-000000000000"))
             {
                 return PartialView("_ProductListPartial", productList);
@@ -57,14 +61,19 @@ namespace EcommerceManagement.Controllers
         }
 
         [HttpPost]
-        public IActionResult Search(string query)
+        public IActionResult Search(string? searchQuery)
         {
-            // Retrieve products based on the search query
-            var products = _ecommerceDbContext.Products
-                .Where(p => string.IsNullOrEmpty(query) || p.ProductName.Contains(query))
-                .ToList();
+           
 
-            return RedirectToAction("GetProductsByCategory"); // Create a partial view for search results
+            if (TempData.TryGetValue("AdminSelectedCategoryId", out var adminSelectedCategoryId))
+            {
+                ViewBag.DefaultCategoryId = (Guid)adminSelectedCategoryId;
+            }
+            
+
+           
+            return RedirectToAction("GetProductsByCategory", new RouteValueDictionary(new { Controller ="Product", action = "GetProductsByCategory", categoryId = ViewBag.DefaultCategoryId, abc = searchQuery }));
+
         }
 
         [HttpGet]
