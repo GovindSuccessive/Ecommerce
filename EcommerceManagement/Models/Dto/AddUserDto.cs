@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace EcommerceManagement.Models.Dto
@@ -19,6 +20,8 @@ namespace EcommerceManagement.Models.Dto
         [DataType(DataType.PhoneNumber)]
         public string? PhoneNo { get; set; }
 
+        [DefaultValue(true)]
+        public bool IsActivate { get; set; }
 
         [DataType(DataType.MultilineText)]
         public string? Address { get; set; }

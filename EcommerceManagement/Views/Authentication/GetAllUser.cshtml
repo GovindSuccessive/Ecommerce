@@ -24,7 +24,7 @@
                     <th>Email</th>
                     <th>Address</th>
                     <th>Phone no</th>
-                    <th>PassWord</th>
+                    <th>Password</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -42,6 +42,7 @@
                         <td>@x.PhoneNo</td>
 
                         <td>@x.Password</td>
+
                         <td>
                                 <a class="btn btn-primary" asp-action="UpdateUsers" asp-controller="Authentication" asp-route-id="@x.Id">Edit</a>
                             @if (x.IsActivate)

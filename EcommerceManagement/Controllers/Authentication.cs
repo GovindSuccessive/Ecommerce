@@ -9,11 +9,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EcommerceManagement.Controllers
 {
-    public class Authentication : Controller
+    public class Authentication : Controller 
     {
         private readonly SignInManager<UserModel> _signInManager;
         private readonly UserManager<UserModel> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
+      
 
         public Authentication(SignInManager<UserModel> signInManager, UserManager<UserModel> userManager, RoleManager<IdentityRole> roleManager)
         {
@@ -25,6 +26,10 @@ namespace EcommerceManagement.Controllers
 
         public IActionResult Login()
         {
+            Response.Headers["Cache-Control"] = "no-cache, no-store, must-revalidate";
+            Response.Headers["Pragma"] = "no-cache";
+            Response.Headers["Expires"] = "0";
+
             if (_signInManager.IsSignedIn(User))
             {
                 return RedirectToAction("Index", "Home");
@@ -37,23 +42,43 @@ namespace EcommerceManagement.Controllers
         {
             if (ModelState.IsValid)
             {
-                //login
-                var result = await _signInManager.PasswordSignInAsync(model.Username!, model.Password!, model.RememberMe, false);
-                var users = _userManager.Users.Where(x => x.Email == model.Username).ToList();
-
-                if (result.Succeeded )
-                {
-                    if (User.IsInRole("Admin"))
+                bool EmailExist = _userManager.Users.AnyAsync(x => x.UserName == model.Username).Result;
+                if (EmailExist) {
+                
+                    bool checkActivation = _userManager.Users.First(x => x.Email == model.Username).IsActivate;
+                    //login
+                    if (checkActivation)
                     {
-                        return RedirectToAction("Index", "Admin");
+                        var result = await _signInManager.PasswordSignInAsync(model.Username!, model.Password!, model.RememberMe, false);
+                   
+                        if (result.Succeeded && checkActivation)
+                        {
+                            if (User.IsInRole("Admin"))
+                            {
+                                return RedirectToAction("Index", "Admin");
+                            }
+                            if (User.IsInRole("User"))
+                            {
+                                return RedirectToAction("Index", "Home");
+                            }
+                        }
+                        else
+                        {
+                            ModelState.AddModelError("", "Invalid login attempt");
+                        }
                     }
-                    if (User.IsInRole("User"))
+                    else
                     {
-                        return RedirectToAction("Index", "Home");
+                        ModelState.AddModelError("", "Your Account is Deactivated! Please Contact to Admin");
+                        
                     }
                 }
+                else
+                {
+                    ModelState.AddModelError("", "Your Account Does not Exits");
+                }
 
-                ModelState.AddModelError("", "Invalid login attempt");
+               
                 return View(model);
             }
             return View(model);
@@ -77,6 +102,7 @@ namespace EcommerceManagement.Controllers
                     Email = model.Email,
                     PhoneNo = model.PhoneNo,
                     Address = model.Address,
+                    IsActivate=true,
                     Password = model.Password,
                     ConfirmPassword = model.ConfirmPassword,
 
@@ -88,6 +114,8 @@ namespace EcommerceManagement.Controllers
                 {
                     if (_signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
                     {
+                        await _userManager.AddToRoleAsync(user, Roles.User.ToString());
+                        await _signInManager.SignInAsync(user, isPersistent: false);
                         return RedirectToAction("GetAllUser", "Authentication");
                     }
                     await _userManager.AddToRoleAsync(user, Roles.User.ToString());
@@ -110,6 +138,49 @@ namespace EcommerceManagement.Controllers
         }
 
         [HttpGet]
+        public IActionResult GetProfile()
+        {
+            if (_signInManager.IsSignedIn(User))
+            {
+                var userId = _signInManager.UserManager.GetUserId(User);
+                var user = _signInManager.UserManager.FindByIdAsync(userId).Result;
+                return View(user);
+            }
+           return RedirectToAction("Index", "Home");
+        }
+
+        [HttpGet]
+        public IActionResult ChangePassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ChangePassword(ChangePasswordDto changePasswordDto)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user != null)
+            {
+               var result = await _userManager.ChangePasswordAsync(user, changePasswordDto.OldPassword, changePasswordDto.NewPassword);
+                if (result.Succeeded)
+                {
+                    user.Password=changePasswordDto.NewPassword;
+                    user.ConfirmPassword = changePasswordDto.NewPassword;
+                    await _userManager.UpdateAsync(user);
+                    ModelState.Clear();
+                    return RedirectToAction("GetProfile");
+                }
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError("", error.Description);
+                }
+
+
+            }
+            return RedirectToAction("GetProfile");
+        }
+
+        [HttpGet]
         public async Task<IActionResult> UpdateUsers(string id)
         {
             var user = await _userManager.FindByIdAsync(id);
@@ -127,17 +198,13 @@ namespace EcommerceManagement.Controllers
                 Id=Guid.Parse(user.Id),
                 FirstName = user.FirstName,
                 LastName = user.LastName,
-                Email = user.Email,
                 Address = user.Address,
                 PhoneNo = user.PhoneNo,
-                NewPassword = user.Password,
                 Claims = userClaims.Select(c => c.Value).ToList(),
                 Roles = userRoles,
             };
 
             return View(model);
-
-
         }
 
         [HttpPost]
@@ -153,14 +220,22 @@ namespace EcommerceManagement.Controllers
             {
                 user.FirstName = updateUserModel.FirstName;
                 user.LastName = updateUserModel.LastName;
-                user.Email = updateUserModel.Email;
                 user.Address = updateUserModel.Address;
                 user.PhoneNo = updateUserModel.PhoneNo;
+                
+
                 var result = await _userManager.UpdateAsync(user);
 
                 if(result.Succeeded)
                 {
-                    return RedirectToAction("GetAllUser");
+                    if (User.IsInRole("Admin"))
+                    {
+                        return RedirectToAction("GetAllUser");
+                    }
+                    else
+                    {
+                        return RedirectToAction("GetProfile");
+                    }
                 }
                 foreach(var error in result.Errors)
                 {
@@ -182,7 +257,7 @@ namespace EcommerceManagement.Controllers
                 user.IsActivate = true;
                await  _userManager.UpdateAsync(user);
             }
-            return RedirectToAction("GetAll");
+            return RedirectToAction("GetAllUser");
         }
 
         [HttpGet]
@@ -195,15 +270,50 @@ namespace EcommerceManagement.Controllers
                 user.IsActivate = false;
                 await _userManager.UpdateAsync(user);
             }
-            return RedirectToAction("GetAll");
+            return RedirectToAction("GetAllUser");
         }
 
 
         [HttpGet]
         public async Task<IActionResult> Logout()
         {
+            Response.Headers["Cache-Control"] = "no-cache, no-store, must-revalidate";
+            Response.Headers["Pragma"] = "no-cache";
+            Response.Headers["Expires"] = "0";
+
             await _signInManager.SignOutAsync();
             return RedirectToAction("Login");
         }
+
+        [HttpGet]
+
+        public async Task<IActionResult> DeleteUser(Guid id)
+        {
+            var user = await _userManager.FindByIdAsync(id.ToString());
+            
+            if(user == null)
+            {
+                ViewBag.ErrorMessage = $"User with Id = {id} cannot be found";
+                return View("NotFound");
+            }
+            else
+            {
+                var result = await _userManager.DeleteAsync(user);
+
+                if(result.Succeeded)
+                {
+                    return RedirectToAction("Logout");
+                }
+
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError("", error.Description);
+                }
+                return RedirectToAction("GetProfile");
+            }
+        }
+
+
+
     }
 }

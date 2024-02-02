@@ -54,7 +54,7 @@
         </style>
   
     </head>
-    <boyd>
+    <body>
     <div class="input-group d-flex justify-content-end mt-2">
         <form id="searchForm" asp-action="Search" asp-controller="Product">
             <div class="input-group mb-3">
@@ -90,14 +90,14 @@
                                 @if (User.IsInRole("Admin"))
                                 {
                                     <div class="d-flex justify-content-between">
-                                        <a href="/Product/Update/@x.ProductId" class="btn mr-2 text-center"><i class="fas fa-link pe-2 ps-2 text-center"></i> Edit</a>
-                                        <a href="/Product/Deactive/@x.ProductId" class="btn deactive-btn" data-id="@x.ProductId"><i class="fab fa-github"></i> Deactive</a>
+                                        <a href="/Product/Update/@x.ProductId" class="btn mr-2 text-center"><span class="ps-3 pe-3">Edit</span></a>
+                                        <a href="/Product/Deactive/@x.ProductId" class="btn deactive-btn text-center" data-id="@x.ProductId"> Deactive</a>
                                     </div>
                                 }
                                 else
                                 {
                                     <div>
-                                        <a href="/Product/Update/@x.ProductId" class="btn w-100 text-center"><i class="fas fa-link pe-2 ps-2 text-center"></i> Add To Cart</a>
+                                        <a href="#" class="btn w-100 text-center"><i class="fas fa-link pe-2 ps-2 text-center"></i> Add To Cart</a>
                                     </div>
                                 }
                             </div>
@@ -118,47 +118,48 @@
         </div>
     }
 
-    </boyd>
     @section Scripts{
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.20/dist/sweetalert2.all.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            // Add click event to the "Deactive" button
-            $(document).ready(function () {
-                // Add click event to the "Deactive" button
-                $('.deactive-btn').on('click', function (e) {
-                    e.preventDefault();
-
-                    // Get the product ID from the button's data-id attribute
-                    var productId = $(this).data('id');
-
-                    // Show SweetAlert2 confirmation dialog
-                    Swal.fire({
-                        title: "Are you sure?",
-                        text: "You won't be able to revert this!",
-                        icon: "warning",
-                        showCancelButton: true,
-                        confirmButtonColor: "#3085d6",
-                        cancelButtonColor: "#d33",
-                        confirmButtonText: "Yes, deactivate it!"
-                    }).then((result) => {
-                        if (result.isConfirmed) {
-                            // Perform the deactivation action
-                            window.location.href = $(this).attr('href');
-                        }
-                    });
-                });
-            });
-    </script>
+   
+        <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.20/dist/sweetalert2.all.min.js"></script>
         <script>
             $(function () {
                 $("#searching").click(function () {
                     $("#Form").submit();
                 })
             })
-       
+        </script>
+        <script>
+            $(document).ready(function () {
+                // Add click event to the "Deactive" button
+                $(document).ready(function () {
+                    // Add click event to the "Deactive" button
+                    $('.deactive-btn').on('click', function (e) {
+                        e.preventDefault();
+
+                        // Get the product ID from the button's data-id attribute
+                        var productId = $(this).data('id');
+
+                        // Show SweetAlert2 confirmation dialog
+                        Swal.fire({
+                            title: "Are you sure?",
+                            text: "You won't be able to revert this!",
+                            icon: "warning",
+                            showCancelButton: true,
+                            confirmButtonColor: "#3085d6",
+                            cancelButtonColor: "#d33",
+                            confirmButtonText: "Yes, deactivate it!"
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                // Perform the deactivation action
+                                window.location.href = $(this).attr('href');
+                            }
+                        });
+                    });
+                });
         </script>
     }
+    </body>
 </html>
 
 

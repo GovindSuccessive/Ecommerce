@@ -29,7 +29,7 @@ namespace EcommerceManagement.Controllers
         [HttpGet("id")]
         public async Task<IActionResult> GetAllByCategory(Guid categoryId)
         {
-            var product =  await _ecommerceDbContext.Products.Include(x => x.Category).ToListAsync();
+            var product =  await _ecommerceDbContext.Products.Include(x => x.Category).OrderByDescending(x=>x.ProductCreated).ToListAsync();
             if(categoryId== Guid.Parse("00000000-0000-0000-0000-000000000000"))
             {
                 return PartialView("_GetAllPartial",product);
@@ -48,6 +48,10 @@ namespace EcommerceManagement.Controllers
             if (abc != null)
             {
                selectedProducts = productList.Where(x => x.Category.CategoryId == categoryId &&  x.ProductName.ToLower().Contains(abc.ToLower())).ToList();
+            }
+            if (categoryId == Guid.Parse("00000000-0000-0000-0000-000000000000") && abc!=null)
+            {
+                return PartialView("_ProductListPartial", productList.Where(x => x.ProductName.ToLower().Contains(abc.ToLower())).ToList());
             }
             if (categoryId == Guid.Parse("00000000-0000-0000-0000-000000000000"))
             {
