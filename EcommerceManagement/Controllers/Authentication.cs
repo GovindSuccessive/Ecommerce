@@ -1,5 +1,6 @@
 ﻿using EcommerceManagement.Constant;
 using EcommerceManagement.Data;
+using EcommerceManagement.EmailServices;
 using EcommerceManagement.Models.Domain;
 using EcommerceManagement.Models.Dto;
 using Microsoft.AspNetCore.Authorization;
@@ -14,13 +15,18 @@ namespace EcommerceManagement.Controllers
         private readonly SignInManager<UserModel> _signInManager;
         private readonly UserManager<UserModel> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
-      
+        private readonly IEmailSender _emailSender;
 
-        public Authentication(SignInManager<UserModel> signInManager, UserManager<UserModel> userManager, RoleManager<IdentityRole> roleManager)
+        public Authentication(SignInManager<UserModel> signInManager, 
+            UserManager<UserModel> userManager, 
+            RoleManager<IdentityRole> roleManager,
+            IEmailSender emailSender
+            )
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _roleManager = roleManager;
+           _emailSender = emailSender;
         }
 
 
@@ -115,7 +121,6 @@ namespace EcommerceManagement.Controllers
                     if (_signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
                     {
                         await _userManager.AddToRoleAsync(user, Roles.User.ToString());
-                        await _signInManager.SignInAsync(user, isPersistent: false);
                         return RedirectToAction("GetAllUser", "Authentication");
                     }
                     await _userManager.AddToRoleAsync(user, Roles.User.ToString());
@@ -159,6 +164,7 @@ namespace EcommerceManagement.Controllers
         public async Task<IActionResult> ChangePassword(ChangePasswordDto changePasswordDto)
         {
             var user = await _userManager.GetUserAsync(User);
+            
             if (user != null)
             {
                var result = await _userManager.ChangePasswordAsync(user, changePasswordDto.OldPassword, changePasswordDto.NewPassword);
@@ -166,6 +172,7 @@ namespace EcommerceManagement.Controllers
                 {
                     user.Password=changePasswordDto.NewPassword;
                     user.ConfirmPassword = changePasswordDto.NewPassword;
+
                     await _userManager.UpdateAsync(user);
                     ModelState.Clear();
                     return RedirectToAction("GetProfile");
@@ -177,8 +184,51 @@ namespace EcommerceManagement.Controllers
 
 
             }
-            return RedirectToAction("GetProfile");
+            return View(changePasswordDto);
         }
+
+        [HttpGet]
+        public IActionResult ChangePasswordByAdmin(Guid id)
+        {
+            var user = _userManager.Users.First(x => x.Id == id.ToString());
+            var newUser = new ChangePasswordByAdmin()
+            {
+                OldPassword = user.Password,
+                UserName = user.UserName
+            };
+            return View(newUser);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ChangePasswordByAdmin(ChangePasswordByAdmin changePasswordByAdmin)
+        {
+            var user = await _userManager.GetUserAsync(User);
+            var changingUser = await _userManager.Users.FirstAsync(x=>x.UserName==changePasswordByAdmin.UserName);
+
+
+            if (user != null)
+            {
+                var result = await _userManager.ChangePasswordAsync(changingUser, changePasswordByAdmin.OldPassword, changePasswordByAdmin.NewPassword);
+                if (result.Succeeded)
+                {
+                    user.Password = changePasswordByAdmin.NewPassword;
+                    user.ConfirmPassword = changePasswordByAdmin.NewPassword;
+                    var message = "NewPassword : = " + changePasswordByAdmin.NewPassword;
+                    await _userManager.UpdateAsync(changingUser);
+                    await _emailSender.SendEmailAsync(changePasswordByAdmin.UserName, "PassWord Changed BY Admin", message);
+                    ModelState.Clear();
+                    return RedirectToAction("GetProfile");
+                }
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError("", error.Description);
+                }
+
+
+            }
+            return View(changePasswordByAdmin);
+        }
+
 
         [HttpGet]
         public async Task<IActionResult> UpdateUsers(string id)

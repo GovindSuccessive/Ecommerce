@@ -1,9 +1,11 @@
 using EcommerceManagement.Data;
+using EcommerceManagement.EmailServices;
 using EcommerceManagement.Models.Domain;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
 using System;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,6 +27,13 @@ builder.Services.AddIdentity<UserModel, IdentityRole>(
         options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+/ ";
     })
     .AddEntityFrameworkStores<EcommerceDbContext>().AddDefaultTokenProviders();
+
+
+// Email Services 
+
+builder.Services.AddTransient<IEmailSender,EmailSender>();
+/*builder.Services.AddSingleton<IEmailSender, EmailSender>();*/
+
 
 var app = builder.Build();
 
@@ -52,7 +61,7 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Authentication}/{action=Login}/{id?}");
+    pattern: "{controller=Home}/{action=Index}/{id?}");
 
 
 using (var scope = app.Services.CreateScope())

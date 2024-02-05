@@ -2,6 +2,7 @@
 using EcommerceManagement.Models.Domain;
 using EcommerceManagement.Models.Dto;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 
 namespace EcommerceManagement.Controllers
@@ -26,59 +27,80 @@ namespace EcommerceManagement.Controllers
             return View();
         }
 
-        [HttpGet("id")]
-        public async Task<IActionResult> GetAllByCategory(Guid categoryId)
+        [HttpGet]
+        public async Task<IActionResult> GetAllByCategory(Guid categoryId,string searchingQuery, string sortOrder)
         {
             var product =  await _ecommerceDbContext.Products.Include(x => x.Category).OrderByDescending(x=>x.ProductCreated).ToListAsync();
-            if(categoryId== Guid.Parse("00000000-0000-0000-0000-000000000000"))
+            if (categoryId != Guid.Empty)
             {
-                return PartialView("_GetAllPartial",product);
+                if (categoryId != Guid.Parse("00000000-0000-0000-0000-000000000000"))
+                {
+                    product = product.Where(x => x.Category.CategoryId == categoryId).ToList();
+                }
             }
-            return PartialView("_GetAllPartial",product.Where(x => x.CategoryRefId == categoryId).ToList());
+            if (!string.IsNullOrEmpty(searchingQuery))
+            {
+                searchingQuery = searchingQuery.ToLower();
+                product = product.Where(x => x.ProductName.ToLower().Contains(searchingQuery)).ToList();
+            }
+
+            switch (sortOrder)
+            {
+                case "normal":
+                    product = product.ToList();
+                    break;
+                case "asc":
+                    product = product.OrderBy(x => x.ProductPrice).ToList();
+                    break;
+                case "desc":
+                    product = product.OrderByDescending(x => x.ProductPrice).ToList();
+                    break;
+            }
+            return PartialView("_GetAllPartial",product);
         }
+
 
         [HttpGet]
-
-        public async Task<IActionResult> GetProductsByCategory(Guid categoryId,string abc)
+        public async Task<IActionResult> GetProductsByCategory(Guid categoryId, string searchingQuery, string sortOrder)
         {
-            var productList = await _ecommerceDbContext.Products.Include(x => x.Category).Where(x=>x.IsActive == true).OrderByDescending(x=>x.IsTrending).Take(100).ToListAsync();
+            var productList = await _ecommerceDbContext.Products
+                .Include(x => x.Category)
+                .Where(x => x.IsActive == true)
+                .OrderByDescending(x => x.IsTrending)
+                .Take(100)
+                .ToListAsync();
 
             TempData["AdminSelectedCategoryId"] = categoryId;
-            var selectedProducts = productList.Where(x => x.Category.CategoryId == categoryId).ToList();
-            if (abc != null)
+
+            if (categoryId != Guid.Empty)
             {
-               selectedProducts = productList.Where(x => x.Category.CategoryId == categoryId &&  x.ProductName.ToLower().Contains(abc.ToLower())).ToList();
-            }
-            if (categoryId == Guid.Parse("00000000-0000-0000-0000-000000000000") && abc!=null)
-            {
-                return PartialView("_ProductListPartial", productList.Where(x => x.ProductName.ToLower().Contains(abc.ToLower())).ToList());
-            }
-            if (categoryId == Guid.Parse("00000000-0000-0000-0000-000000000000"))
-            {
-                return PartialView("_ProductListPartial", productList);
-            }
-            else
-            {
-                return PartialView("_ProductListPartial", selectedProducts);
+                if (categoryId != Guid.Parse("00000000-0000-0000-0000-000000000000")){
+                    productList = productList.Where(x => x.Category.CategoryId == categoryId).ToList();
+                }
             }
 
+            if (!string.IsNullOrEmpty(searchingQuery))
+            {
+                searchingQuery = searchingQuery.ToLower();
+                productList = productList.Where(x => x.ProductName.ToLower().Contains(searchingQuery)).ToList();
+            }
+
+            switch (sortOrder)
+            {
+                case "normal":
+                    productList = productList.ToList();
+                    break;
+                case "asc":
+                    productList = productList.OrderBy(x => x.ProductPrice).ToList();
+                    break;
+                case "desc":
+                    productList = productList.OrderByDescending(x => x.ProductPrice).ToList();
+                    break;
+            }
+
+            return PartialView("_ProductListPartial", productList);
         }
 
-        [HttpPost]
-        public IActionResult Search(string? searchQuery)
-        {
-           
-
-            if (TempData.TryGetValue("AdminSelectedCategoryId", out var adminSelectedCategoryId))
-            {
-                ViewBag.DefaultCategoryId = (Guid)adminSelectedCategoryId;
-            }
-            
-
-           
-            return RedirectToAction("GetProductsByCategory", new RouteValueDictionary(new { Controller ="Product", action = "GetProductsByCategory", categoryId = ViewBag.DefaultCategoryId, abc = searchQuery }));
-
-        }
 
         [HttpGet]
         public async Task<IActionResult> AddProduct()

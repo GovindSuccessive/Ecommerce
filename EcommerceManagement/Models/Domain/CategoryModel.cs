@@ -11,6 +11,6 @@ namespace EcommerceManagement.Models.Domain
 
         public string CategoryDescription { get; set; }
 
-        public ICollection<ProductModel> Products { get; set; }
+        public virtual ICollection<ProductModel> Products { get; set; }
     }
 }

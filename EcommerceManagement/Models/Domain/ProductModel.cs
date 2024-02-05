@@ -27,8 +27,10 @@ namespace EcommerceManagement.Models.Domain
 
         public DateTime ProductCreated { get; set; }
 
-        public CategoryModel Category { get; set; }
+        public virtual CategoryModel Category { get; set; }
 
         public Guid CategoryRefId { get; set; }
+
+        public virtual CartModel Cart { get; set; }
     }
 }

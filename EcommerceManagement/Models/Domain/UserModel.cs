@@ -8,7 +8,8 @@ namespace EcommerceManagement.Models.Domain
     public class UserModel : IdentityUser
     {
         [Key]
-        public int UserId { get; set; }
+        public override string Id { get; set; }
+        public Guid UserId { get; set; }
 
         [Required]
         [MaxLength(60)]
@@ -41,6 +42,9 @@ namespace EcommerceManagement.Models.Domain
         [Display(Name = "Confirm Password")]
         [DataType(DataType.Password)]
         public string ConfirmPassword { get; set; }
+
+        public virtual CartModel Cart { get; set; }
+
 
 
     }

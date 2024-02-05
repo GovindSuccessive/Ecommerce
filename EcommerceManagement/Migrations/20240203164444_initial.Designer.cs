@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EcommerceManagement.Migrations
 {
     [DbContext(typeof(EcommerceDbContext))]
-    [Migration("20240128074702_ProductProperty")]
-    partial class ProductProperty
+    [Migration("20240203164444_initial")]
+    partial class initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -41,18 +41,16 @@ namespace EcommerceManagement.Migrations
                     b.Property<Guid>("ProductRefId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
+                    b.Property<string>("UserRefId")
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<Guid>("UserRefId")
-                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("CartId");
 
                     b.HasIndex("ProductId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UserRefId")
+                        .IsUnique()
+                        .HasFilter("[UserRefId] IS NOT NULL");
 
                     b.ToTable("Cart", (string)null);
                 });
@@ -153,6 +151,9 @@ namespace EcommerceManagement.Migrations
                         .HasMaxLength(60)
                         .HasColumnType("nvarchar(60)");
 
+                    b.Property<bool>("IsActivate")
+                        .HasColumnType("bit");
+
                     b.Property<string>("LastName")
                         .HasColumnType("nvarchar(max)");
 
@@ -195,8 +196,8 @@ namespace EcommerceManagement.Migrations
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("bit");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("UserName")
                         .HasMaxLength(256)
@@ -215,7 +216,7 @@ namespace EcommerceManagement.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<string>", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -223,6 +224,11 @@ namespace EcommerceManagement.Migrations
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasMaxLength(21)
+                        .HasColumnType("nvarchar(21)");
 
                     b.Property<string>("Name")
                         .HasMaxLength(256)
@@ -240,6 +246,10 @@ namespace EcommerceManagement.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("IdentityRole<string>");
+
+                    b.UseTphMappingStrategy();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -348,6 +358,13 @@ namespace EcommerceManagement.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
+                {
+                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityRole<string>");
+
+                    b.HasDiscriminator().HasValue("IdentityRole");
+                });
+
             modelBuilder.Entity("EcommerceManagement.Models.Domain.CartModel", b =>
                 {
                     b.HasOne("EcommerceManagement.Models.Domain.ProductModel", "Product")
@@ -357,10 +374,8 @@ namespace EcommerceManagement.Migrations
                         .IsRequired();
 
                     b.HasOne("EcommerceManagement.Models.Domain.UserModel", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithOne("Cart")
+                        .HasForeignKey("EcommerceManagement.Models.Domain.CartModel", "UserRefId");
 
                     b.Navigation("Product");
 
@@ -380,7 +395,7 @@ namespace EcommerceManagement.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<string>", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -407,7 +422,7 @@ namespace EcommerceManagement.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
                 {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole<string>", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -432,6 +447,12 @@ namespace EcommerceManagement.Migrations
             modelBuilder.Entity("EcommerceManagement.Models.Domain.CategoryModel", b =>
                 {
                     b.Navigation("Products");
+                });
+
+            modelBuilder.Entity("EcommerceManagement.Models.Domain.UserModel", b =>
+                {
+                    b.Navigation("Cart")
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

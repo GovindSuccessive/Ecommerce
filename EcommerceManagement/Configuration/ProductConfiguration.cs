@@ -12,7 +12,14 @@ namespace EcommerceManagement.Configuration
             builder.Property(x => x.ProductId).IsUnicode(true).ValueGeneratedOnAdd();
             builder.HasOne(x => x.Category)
                 .WithMany(x => x.Products)
-                .HasForeignKey(x => x.CategoryRefId);
+                .HasForeignKey(x => x.CategoryRefId)
+                .IsRequired(false);
+                
+
+            builder.HasOne(x => x.Cart)
+                .WithOne(x => x.Product)
+                .HasPrincipalKey<ProductModel>(x => x.ProductId)
+                .IsRequired(false);
         }
     }
 }

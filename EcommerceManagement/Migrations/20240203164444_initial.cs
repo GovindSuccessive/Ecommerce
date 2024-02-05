@@ -18,7 +18,8 @@ namespace EcommerceManagement.Migrations
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Discriminator = table.Column<string>(type: "nvarchar(21)", maxLength: 21, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -30,13 +31,14 @@ namespace EcommerceManagement.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    UserId = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     FirstName = table.Column<string>(type: "nvarchar(60)", maxLength: 60, nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: false),
                     PhoneNo = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Role = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    IsActivate = table.Column<bool>(type: "bit", nullable: false),
                     Password = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ConfirmPassword = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -188,6 +190,8 @@ namespace EcommerceManagement.Migrations
                     ProductImage = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     IsAvailable = table.Column<bool>(type: "bit", nullable: false),
                     IsTrending = table.Column<bool>(type: "bit", nullable: false),
+                    IsActive = table.Column<bool>(type: "bit", nullable: false),
+                    ProductCreated = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CategoryRefId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
                 },
                 constraints: table =>
@@ -209,18 +213,16 @@ namespace EcommerceManagement.Migrations
                     CartItems = table.Column<int>(type: "int", nullable: false),
                     ProductRefId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     ProductId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UserRefId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    UserRefId = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Cart", x => x.CartId);
                     table.ForeignKey(
-                        name: "FK_Cart_AspNetUsers_UserId",
-                        column: x => x.UserId,
+                        name: "FK_Cart_AspNetUsers_UserRefId",
+                        column: x => x.UserRefId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Cart_Product_ProductId",
                         column: x => x.ProductId,
@@ -274,9 +276,11 @@ namespace EcommerceManagement.Migrations
                 column: "ProductId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Cart_UserId",
+                name: "IX_Cart_UserRefId",
                 table: "Cart",
-                column: "UserId");
+                column: "UserRefId",
+                unique: true,
+                filter: "[UserRefId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Product_CategoryRefId",

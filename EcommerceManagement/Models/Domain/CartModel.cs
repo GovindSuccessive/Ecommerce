@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EcommerceManagement.Models.Domain
 {
@@ -11,10 +12,12 @@ namespace EcommerceManagement.Models.Domain
 
         public Guid ProductRefId { get; set; }
 
-        public ProductModel Product { get; set; }
+        public Guid ProductId { get; set; }
 
-        public Guid UserRefId { get; set; }
+        public virtual ProductModel Product { get; set; }
 
-        public UserModel User { get; set; }
+        public string UserRefId { get; set; }
+
+        public virtual UserModel User { get; set; }
     }
 }

@@ -8,7 +8,7 @@ using System.Diagnostics;
 
 namespace EcommerceManagement.Controllers
 {
-    [Authorize(Roles = "Admin,User")]
+   
     public class HomeController : Controller
     {
        

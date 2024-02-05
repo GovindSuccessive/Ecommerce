@@ -22,6 +22,7 @@ namespace EcommerceManagement.Data
                 Email = "admin@gmail.com",
                 FirstName = "Ravindra",
                 Address="Noida",
+                IsActivate = true,
                 Role="Admin",
                 Password= "Admin@123",
                 ConfirmPassword= "Admin@123",

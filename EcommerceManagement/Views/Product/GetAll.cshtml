@@ -10,14 +10,15 @@
         .mt70 {
             margin-top: 70px;
         }
+
         </style>
     </head>
     <body>
     <h3 class="m-3 mt70">All Products</h3>
 
     <div class="d-flex mt70 justify-content-between">
-        <div>
-            <select class="form-select " style="width:10rem" id="categoryId">
+        <div class="d-flex justify-content-between" style="width:20rem">
+            <select class="form-select me-3" id="categoryId" style="width:10rem">
                 @if (CategoryList != null && CategoryList.Count > 0)
                 {
                     @foreach (var x in CategoryList)
@@ -26,86 +27,49 @@
                     }
                 }
             </select>
+            <div >
+                <label for="sortOrder" class="form-label text-white">Sort Order</label>
+                <select class="form-select" style="width:10rem" id="sortOrder">
+                    <option value="normal" selected>Price</option>
+                    <option value="asc">Ascending</option>
+                    <option value="desc">Descending</option>
+                </select>
+            </div>
+
         </div>
         <div class="d-flex justify-content-between">
-            <div class="me-5">
-                <a class="btn btn-success" href="/Product/AddProduct">Add New Product</a>
+            <div class="me-3">
+                <a class="btn btn-success" style="width:12rem;" href="/Product/AddProduct">Add New Product</a>
             </div>
-            <div class="form-outline" data-mdb-input-init>
-                <input type="search" id="form1" class="form-control" />
-                <label class="form-label" for="form1">Search</label>
-            </div>
-            <div class="mt-2 ms-2">
-                <i class="bi bi-search"></i>
+            <div class="input-group d-flex justify-content-end ">
+                <form id="searchForm" asp-action="GetProductsByCategory" asp-controller="Product">
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" placeholder="Search products..." value="" id="searchInput" name="searchQuery">
+                        <button class="btn btn-outline-primary" type="submit" id="searching">Search</button>
+                        <button type="button" class="btn btn-outline-danger" id="resetButton">Reset</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
-
-@*     <table class="table table-dark  table-striped-columns">
-        <thead>
-            <tr>
-                <th>Product Name</th>
-                <th>Product Description</th>
-                <th>Product Price</th>
-                <th>Is Available</th>
-                <th>Is Trending</th>
-                <th>Category Name</th>
-                <th>Created At</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            @if (Model != null)
-            {
-                @foreach (var product in Model)
-                {
-                    <tr>
-                        <td>@product.ProductName</td>
-                        <td>@product.ProductDes</td>
-                        <td>@product.ProductPrice</td>
-                        <td>@product.IsAvailable</td>
-                        <td>@product.IsTrending</td>
-                        <td>@product.CategoryName</td>
-                        <td>@product.ProductCreated.Date.ToString("dd-MM-yyyy")</td>
-                        <td>
-                            <a class="btn btn-primary" href="/Product/Update/@product.ProductId">Edit</a>
-                            @if (product.IsActive)
-                            {
-                                <a class="btn btn-danger" href="/Product/Deactive/@product.ProductId">Deactive</a>
-                            }
-                            else
-                            {
-                                <a class="btn btn-success" href="/Product/Active/@product.ProductId">Active</a>
-                            }
-                        </td>
-                    </tr>
-                }
-            }
-        </tbody>
-    </table> *@
 
     <div id="productTableBody">
 
     </div>
-
-    <!-- ... (previous HTML code) -->
-@section Scripts{
+    @section Scripts {
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
         <script>
 
-            $(document).ready(function () {
-                getProductByCategoryId();
-            });
-            $("#categoryId").change(function () {
-                getProductByCategoryId();
-            });
-            var getProductByCategoryId = function () {
+            var getProducts = function () {
                 $.ajax({
                     url: '@Url.Action("GetAllByCategory", "Product")',
                     type: 'GET',
                     data: {
                         categoryId: $('#categoryId').val(),
+                        searchingQuery: $('#searchInput').val(),
+                        sortOrder: $('#sortOrder').val(),
                     },
                     success: function (data) {
                         $('#productTableBody').html(data);
@@ -116,9 +80,29 @@
                 });
             }
 
-        </script>
-    <!-- ... (remaining HTML code) -->
+            $(document).ready(function () {
+                getProducts();
+            });
 
-}
+            $("#categoryId, #searching,#sortOrder").change(function () {
+                getProducts();
+            });
+
+            $(function () {
+                $("#searchForm").submit(function (event) {
+                    // Prevent the default form submission
+                    event.preventDefault();
+                    getProducts();
+                });
+            });
+
+            $("#resetButton").click(function () {
+                // Clear search input and reload original state
+                $('#searchInput').val('');
+                getProducts();
+            });
+        </script>
+    }
+ 
     </body>
 </html>

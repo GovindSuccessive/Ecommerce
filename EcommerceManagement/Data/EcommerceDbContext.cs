@@ -1,17 +1,20 @@
 ﻿using EcommerceManagement.Configuration;
 using EcommerceManagement.Models.Domain;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace EcommerceManagement.Data
 {
-    public class EcommerceDbContext : IdentityDbContext<UserModel>
+    public class EcommerceDbContext : IdentityDbContext<UserModel, IdentityRole<string>, string>
     {
         public EcommerceDbContext(DbContextOptions options) : base(options)
         {
         }
 
         public DbSet<UserModel> Users { get; set; }
+
+        public DbSet<IdentityRole> Roles { get; set; }
 
         public DbSet<ProductModel> Products { get; set; }
 
@@ -22,6 +25,7 @@ namespace EcommerceManagement.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // modelBuilder.ApplyConfigurationsFromAssembly(GetType().Assembly);
+            modelBuilder.Entity<UserModel>().ToTable("AspNetUsers");
             modelBuilder.ApplyConfiguration(new ProductConfiguration());
             modelBuilder.ApplyConfiguration(new CategoryConfiguration());
             modelBuilder.ApplyConfiguration(new CartConfiguration());
