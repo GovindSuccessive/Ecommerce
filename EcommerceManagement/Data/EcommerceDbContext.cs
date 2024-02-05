@@ -12,6 +12,7 @@ namespace EcommerceManagement.Data
         {
         }
 
+        public DbSet<FavoritModel> Favorits { get; set; }
         public DbSet<UserModel> Users { get; set; }
 
         public DbSet<IdentityRole> Roles { get; set; }
@@ -26,6 +27,7 @@ namespace EcommerceManagement.Data
         {
             // modelBuilder.ApplyConfigurationsFromAssembly(GetType().Assembly);
             modelBuilder.Entity<UserModel>().ToTable("AspNetUsers");
+            modelBuilder.ApplyConfiguration(new FavoritConfiguration());
             modelBuilder.ApplyConfiguration(new ProductConfiguration());
             modelBuilder.ApplyConfiguration(new CategoryConfiguration());
             modelBuilder.ApplyConfiguration(new CartConfiguration());

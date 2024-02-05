@@ -36,9 +36,9 @@ namespace EcommerceManagement.Controllers
 
                 if (id != Guid.Empty)
                 {
-                    var existingCart = _ecommerceDbContext.Carts.FirstOrDefault(x => x.ProductId == id);
                     var user = _signInManager.UserManager.GetUserId(User);
                     var userId = _signInManager.UserManager.FindByIdAsync(user).Result.UserName;
+                    var existingCart = _ecommerceDbContext.Carts.Where(x=>x.UserRefId==user).FirstOrDefault(x => x.ProductId == id);
 
                     if (existingCart != null)
                     {

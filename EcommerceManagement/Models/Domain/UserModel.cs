@@ -45,6 +45,8 @@ namespace EcommerceManagement.Models.Domain
 
         public virtual CartModel Cart { get; set; }
 
+        public virtual ICollection<FavoritModel> Favorit { get; set; }
+
 
 
     }

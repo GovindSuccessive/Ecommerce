@@ -32,5 +32,7 @@ namespace EcommerceManagement.Models.Domain
         public Guid CategoryRefId { get; set; }
 
         public virtual CartModel Cart { get; set; }
+
+        public virtual FavoritModel Favorit { get; set; }
     }
 }

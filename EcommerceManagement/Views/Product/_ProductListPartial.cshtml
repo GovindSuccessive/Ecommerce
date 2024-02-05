@@ -60,22 +60,22 @@
                 width: 16rem;
                 overflow: hidden;
             }
-            .card-slider {
-                position: absolute;
-                top: 0;
-                right: -100%; /* Initially position the slider outside the card */
-                width: 100%;
-                height: 100%;
-                background-color: rgba(0, 0, 0, 0.8); /* Background color of the slider */
-                transition: right 0.3s ease; /* Smooth transition effect */
-            }
 
-            .card-slider-button {
-                position: absolute;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-            }
+        .top-left-button {
+            position: absolute;
+            top: 10px; /* Adjust the top position as needed */
+            left: 10px; /* Adjust the left position as needed */
+            z-index: 1; /* Ensure the button is above other elements */
+            border-radius:50%;
+            border:none;
+            opacity: 0; /* Initially hide the button */
+            transition: opacity 0.3s ease; /* Smooth transition effect */
+        }
+
+        .card:hover .top-left-button {
+            opacity: 1; /* Make the button visible when the card is hovered */
+        }
+           
         </style>
   
     </head>
@@ -87,13 +87,11 @@
                    {
 
                       <div class="col-md-3">
+
                         <div class="card position-relative" style="width: 16rem;">
                             <img src="/image/@x.ProductImage" class="card-img-top" style="height:12rem" alt="...">
-                            <div class="card-slider">
-                                <div class="card-slider-button">
-                                    <button class="btn btn-primary">Slider Button</button>
-                                </div>
-                            </div>
+                            <a class="top-left-button" href="/Favorit/AddToFavorit/@x.ProductId">
+                                <img src="../Content/images/heart-icon-jst.png" style="width:30px;" /></a>
                             <div class="card-body">
                                 @if (x.IsTrending)
                                 {
@@ -104,8 +102,8 @@
                                 <h5 class="card-title">@x.ProductName</h5>
                                 <h6 class="card-subtitle mb-2 text-muted">@x.Category.CategoryName</h6>
                                 <div class="d-flex justify-content-between mb-2">
-                                   <div class="fs-4 fw-500">Price</div>
-                                    <div class="fs-4 fw-500" >@x.ProductPrice</div>
+                                    <div class="fs-4 fw-500">Price</div>
+                                    <div class="fs-4 fw-500">@x.ProductPrice</div>
                                 </div>
 
                                 @if (User.IsInRole("Admin"))
@@ -119,7 +117,7 @@
                                 {
                                     @if (User.IsInRole("User"))
                                     {
-                                        <div >
+                                        <div>
                                             @* <button class="btn" style="width:100%" asp-action="AddToCart" asp-controller="Cart" asp-route-id="@x.ProductId">Add To Cart</button> *@
                                             <a class="btn" style="width:100%" href="/Cart/AddToCart/@x.ProductId">Add To Cart</a>
                                         </div>
@@ -133,7 +131,9 @@
                                 }
                             </div>
                         </div>
+
                       </div>
+
                    }
                 </div>
         </div>
