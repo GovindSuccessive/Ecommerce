@@ -138,7 +138,7 @@ namespace EcommerceManagement.Controllers
         [HttpGet]
         public IActionResult GetAllUser()
         {
-            var users = _userManager.Users;
+            var users = _userManager.Users.Where(x=>x.Role=="User");
             return View(users);
         }
 

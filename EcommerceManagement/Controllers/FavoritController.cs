@@ -18,7 +18,11 @@ namespace EcommerceManagement.Controllers
         }
         public IActionResult Index()
         {
-            var favoritItem = _ecommerceDbContext.Favorits.Include(x=>x.Product).ToList();
+            /*var favoritItem = _ecommerceDbContext.Favorits.Include(x=>x.Product).ToList();*/
+            var favoritItem = _ecommerceDbContext.Favorits
+               .Include(x => x.Product)
+               .Where(x => x.Product != null && x.UserRefId==_signInManager.UserManager.GetUserId(User)) // Filter out items where Product is null
+               .ToList();
             return View(favoritItem);
         }
 
@@ -43,6 +47,7 @@ namespace EcommerceManagement.Controllers
                         };
                         await _ecommerceDbContext.Favorits.AddAsync(newFavorit);
                         await _ecommerceDbContext.SaveChangesAsync();
+                        
                     }
                 }
                 return RedirectToAction("Index","Home");
@@ -60,6 +65,7 @@ namespace EcommerceManagement.Controllers
                 {
                     _ecommerceDbContext.Favorits.Remove(favoritItems);
                     await _ecommerceDbContext.SaveChangesAsync();
+                    TempData["productFavroitRemove"] = "Product Remove Successfully";
                 }
             }
             return RedirectToAction("Index");

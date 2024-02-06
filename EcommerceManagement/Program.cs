@@ -35,7 +35,12 @@ builder.Services.AddTransient<IEmailSender,EmailSender>();
 /*builder.Services.AddSingleton<IEmailSender, EmailSender>();*/
 
 
+
+
 var app = builder.Build();
+
+// Page not found
+app.UseStatusCodePagesWithReExecute("/Error/{0}");
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

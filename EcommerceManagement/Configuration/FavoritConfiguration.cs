@@ -30,7 +30,7 @@ namespace EcommerceManagement.Configuration
             builder.HasOne(x => x.Product)
                 .WithOne(x=>x.Favorit)
                 .HasForeignKey<FavoritModel>(x => x.ProductRefId)
-                .IsRequired(false);
+                .IsRequired(true);
 
 
 

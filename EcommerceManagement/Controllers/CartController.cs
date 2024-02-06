@@ -78,5 +78,37 @@ namespace EcommerceManagement.Controllers
             }
             return RedirectToAction("Index");
         }
+
+        [HttpGet]
+        public async Task<IActionResult> DecrementCartItem(Guid id)
+        {
+            var LoginUser = _signInManager.UserManager.GetUserAsync(User).Result.Id;
+            var existingProduct = _ecommerceDbContext.Carts.Where(x => x.UserRefId == LoginUser).FirstOrDefault(x => x.ProductId == id);
+            
+            if (existingProduct != null)
+            {
+                if (existingProduct.CartItems == 1)
+                {
+                   return  RedirectToAction("OrderDelet", new { id = existingProduct.CartId });   
+                }
+                existingProduct.CartItems--;
+                await _ecommerceDbContext.SaveChangesAsync();
+            }
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> IncrementCartItem(Guid id)
+        {
+            var LoginUser = _signInManager.UserManager.GetUserAsync(User).Result.Id;
+            var existingProduct = _ecommerceDbContext.Carts.Where(x => x.UserRefId == LoginUser).FirstOrDefault(x => x.ProductId == id);
+
+            if (existingProduct != null)
+            {
+                existingProduct.CartItems++;
+                await _ecommerceDbContext.SaveChangesAsync();
+            }
+            return RedirectToAction("Index");
+        }
     }
 }

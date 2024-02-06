@@ -20,6 +20,12 @@ namespace EcommerceManagement.Configuration
                 .WithOne(x => x.Product)
                 .HasPrincipalKey<ProductModel>(x => x.ProductId)
                 .IsRequired(false);
+
+            builder.HasOne(x=>x.Favorit)
+                .WithOne(x=>x.Product)
+                .HasPrincipalKey<ProductModel>(x=>x.ProductId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .IsRequired(true);
         }
     }
 }

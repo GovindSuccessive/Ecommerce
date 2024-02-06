@@ -5,13 +5,13 @@ using System.Net;
 
 namespace EcommerceManagement.EmailServices
 {
-    public class EmailSender:IEmailSender
+    public class EmailSender : IEmailSender
     {
         private readonly SignInManager<UserModel> _signInManager;
         public readonly RoleManager<IdentityRole> _roleManager;
         private readonly UserManager<UserModel> _userManager;
 
-        public EmailSender(SignInManager<UserModel> signInManager,UserManager<UserModel> userManager, RoleManager<IdentityRole> roleManager)
+        public EmailSender(SignInManager<UserModel> signInManager, UserManager<UserModel> userManager, RoleManager<IdentityRole> roleManager)
         {
             _signInManager = signInManager;
             _userManager = userManager;
@@ -21,13 +21,13 @@ namespace EcommerceManagement.EmailServices
 
         public Task SendEmailAsync(string email, string subject, string message)
         {
-            var mail = "tutorialseu-dev@outlook.com";
-            var pw = "Test12345678!";
+            var mail = "user21819@outlook.com";
+            var pw = "sz37lhcv";
 
             var customer = new SmtpClient("smtp-mail.outlook.com", 587)
             {
-                EnableSsl = false,
-                Credentials = new NetworkCredential(mail, pw)
+                EnableSsl = true,
+            Credentials = new NetworkCredential(mail, pw)
             };
 
             return customer.SendMailAsync(
@@ -36,6 +36,18 @@ namespace EcommerceManagement.EmailServices
                                 subject,
                                 message
                                 ));
+            
+            /*   var gmailUsername = ConfigurationManager.AppSettings["GmailUsername"];
+               var gmailPassword = ConfigurationManager.AppSettings["GmailPassword"];
+
+               var client = new SmtpClient("smtp.gmail.com", 587)
+               {
+                   EnableSsl = true,
+                   Credentials = new NetworkCredential(gmailUsername, gmailPassword)
+               };
+
+               return client.SendMailAsync(
+                   new MailMessage(from: gmailUsername, to: email, subject, message));*/
 
 
         }

@@ -14,6 +14,8 @@ namespace EcommerceManagement.Models.Dto
 
         public IFormFile? ProductImage { get; set; }
 
+
+
         [DefaultValue(true)]
         public bool IsAvailable { get; set; }
 

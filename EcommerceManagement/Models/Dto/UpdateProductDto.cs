@@ -13,6 +13,7 @@ namespace EcommerceManagement.Models.Dto
 
         public IFormFile ProductImage { get; set; }
 
+        public string ImagePath { get; set; }
         public bool IsAvailable { get; set; }
 
         public bool IsTrending { get; set; }

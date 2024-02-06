@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EcommerceManagement.Models.Domain
 {
@@ -13,6 +14,9 @@ namespace EcommerceManagement.Models.Domain
         public string ProductDes {  get; set; } // Product description
 
         public int ProductPrice { get; set; }
+
+        [NotMapped]
+        public IFormFile ProductImageUplode { get; set; }
 
         public string ProductImage { get; set; }
 
