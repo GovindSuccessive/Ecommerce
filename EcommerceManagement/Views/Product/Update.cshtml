@@ -50,13 +50,13 @@
             </div>
             <div class="form-group mb-3">
                 <select class="form-select" aria-label="Default select example" asp-for="CategoryRefId">
-                    <option selected value="00000000-0000-0000-0000-000000000000">All</option>
+                    @* <option selected value="00000000-0000-0000-0000-000000000000">All</option> *@
                     @if (categoryList != null)
                     {
                         @foreach (var x in categoryList)
                         {
 
-                            @if (x.CategoryName != "All")
+                            @if (x.CategoryId != Guid.Parse("00000000-0000-0000-0000-000000000000"))
                             {
                                 <option value="@x.CategoryId">@x.CategoryName</option>
                             }

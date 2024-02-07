@@ -1,4 +1,7 @@
-﻿@model List<EcommerceManagement.Models.Domain.CartModel>
+﻿@using Microsoft.AspNetCore.Identity
+@using EcommerceManagement.Models.Domain;
+@inject SignInManager<UserModel> signInManager;
+@model List<EcommerceManagement.Models.Domain.CartModel>
 
 <html>
     <head>
@@ -11,6 +14,7 @@
     </head>
     <body>
         <div class="container-fluid mt80 ">
+ 
         @foreach(var x in Model)
         {
             <div class="row d-flex  flex-column align-items-center ">

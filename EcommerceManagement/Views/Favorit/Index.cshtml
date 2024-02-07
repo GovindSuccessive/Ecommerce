@@ -18,7 +18,11 @@
         <partial name="_Notification" />
         @if (!signInManager.IsSignedIn(User))
         {
-            <div class="vh-100 d-flex justify-content-center align-item-center"><h1 class="text-secondary">Please Login Your Account First</h1></div>
+            <div class="row">
+                <div class="col-lg-12 vh-100 d-flex justify-content-center align-items-center">
+                    <div> <h1 class="col-lg-12  text-secondary">Please Login Your Account First</h1></div>
+                </div>
+            </div>
             return;
         }
 

@@ -1,6 +1,6 @@
 using EcommerceManagement.Data;
-using EcommerceManagement.EmailServices;
 using EcommerceManagement.Models.Domain;
+using EcommerceManagement.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
@@ -30,8 +30,8 @@ builder.Services.AddIdentity<UserModel, IdentityRole>(
 
 
 // Email Services 
+builder.Services.AddTransient<EmailSender>();
 
-builder.Services.AddTransient<IEmailSender,EmailSender>();
 /*builder.Services.AddSingleton<IEmailSender, EmailSender>();*/
 
 

@@ -28,7 +28,7 @@ namespace EcommerceManagement.Controllers
             _userManager = userManager;
         }
 
-      
+       
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {

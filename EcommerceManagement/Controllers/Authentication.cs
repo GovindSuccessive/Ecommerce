@@ -1,12 +1,13 @@
 ﻿using EcommerceManagement.Constant;
 using EcommerceManagement.Data;
-using EcommerceManagement.EmailServices;
 using EcommerceManagement.Models.Domain;
 using EcommerceManagement.Models.Dto;
+using EcommerceManagement.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using SendGrid.Helpers.Mail;
 
 namespace EcommerceManagement.Controllers
 {
@@ -15,12 +16,12 @@ namespace EcommerceManagement.Controllers
         private readonly SignInManager<UserModel> _signInManager;
         private readonly UserManager<UserModel> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
-        private readonly IEmailSender _emailSender;
+        private readonly EmailSender _emailSender;
 
         public Authentication(SignInManager<UserModel> signInManager, 
             UserManager<UserModel> userManager, 
             RoleManager<IdentityRole> roleManager,
-            IEmailSender emailSender
+            EmailSender emailSender
             )
         {
             _signInManager = signInManager;
@@ -135,6 +136,7 @@ namespace EcommerceManagement.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public IActionResult GetAllUser()
         {
@@ -203,7 +205,7 @@ namespace EcommerceManagement.Controllers
         public async Task<IActionResult> ChangePasswordByAdmin(ChangePasswordByAdmin changePasswordByAdmin)
         {
             var user = await _userManager.GetUserAsync(User);
-            var changingUser = await _userManager.Users.FirstAsync(x=>x.UserName==changePasswordByAdmin.UserName);
+            var changingUser = await _userManager.Users.FirstAsync(x => x.UserName == changePasswordByAdmin.UserName);
 
 
             if (user != null)
@@ -213,9 +215,9 @@ namespace EcommerceManagement.Controllers
                 {
                     user.Password = changePasswordByAdmin.NewPassword;
                     user.ConfirmPassword = changePasswordByAdmin.NewPassword;
-                    var message = "NewPassword : = " + changePasswordByAdmin.NewPassword;
+                    string message = "Your Password has been changed by Admin\nNewPassword : = " + changePasswordByAdmin.NewPassword;
                     await _userManager.UpdateAsync(changingUser);
-                    await _emailSender.SendEmailAsync(changePasswordByAdmin.UserName, "PassWord Changed BY Admin", message);
+                    await _emailSender.SendEmail("Passsword Change", changingUser.Email, changingUser.FirstName + changingUser.LastName, "Your Password has been changed by Admin");
                     ModelState.Clear();
                     return RedirectToAction("GetProfile");
                 }

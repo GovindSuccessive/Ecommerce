@@ -27,38 +27,45 @@
                     <form asp-action="AddProduct" method="post" enctype="multipart/form-data" asp-controller="Product" class="form-control p-5">
                         <h2 class="p-3 text-center">Add Product</h2>
                         <div class="form-group mt-3">
-                            <select class="form-select" aria-label="Default select example" asp-for="CategoryRefId">
+                            <select class="form-select" aria-label="Default select example" asp-for="CategoryRefId" required>
                                 
                                 @if (categoryList != null)
                                 {
                                     @foreach (var x in categoryList)
                                     {
-                                        @if (x.CategoryId == ViewBag.DefaultCategoryId)
+                                        @if (x.CategoryId != Guid.Parse("00000000-0000-0000-0000-000000000000"))
                                         {
-                                            <option value="@x.CategoryId" selected>@x.CategoryName</option>
+                                            @if (x.CategoryId == ViewBag.DefaultCategoryId)
+                                            {
+                                                <option value="@x.CategoryId" selected>@x.CategoryName</option>
+                                            }
+                                            else
+                                            {
+                                                <option value="@x.CategoryId">@x.CategoryName</option>
+                                            }
                                         }
                                         else
                                         {
-                                            <option value="@x.CategoryId">@x.CategoryName</option>
+                                            <option selected disabled>--Select Category--</option>
                                         }
                                     }
                                 }
                             </select>
                         </div>
                         <div class="form-group mt-3">
-                            <input asp-for="ProductName" class="form-control" type="text" placeholder="Product Name" />
+                            <input asp-for="ProductName" class="form-control" type="text" placeholder="Product Name" required />
                             <span asp-validation-for="ProductName" class="text-danger"></span>
                         </div>
                         <div class="form-group mt-3">
-                            <input asp-for="ProductDes" class="form-control" type="text" placeholder="Product Description" />
+                            <input asp-for="ProductDes" class="form-control" type="text" placeholder="Product Description"  />
                             <span asp-validation-for="ProductDes" class="text-danger"></span>
                         </div>
                         <div class="form-group mt-3">
-                            <input asp-for="ProductPrice" class="form-control" type="number" placeholder="Product Price" />
+                            <input asp-for="ProductPrice" class="form-control" type="number" placeholder="Product Price" required />
                             <span asp-validation-for="ProductPrice" class="text-danger"></span>
                         </div>
                         <div class="form-group mt-3">
-                            <input asp-for="ProductImage" class="form-control" type="file" placeholder="Product Image" />
+                            <input asp-for="ProductImage" class="form-control" type="file" placeholder="Product Image" required />
                             <span asp-validation-for="ProductImage" class="text-danger"></span>
                         </div>
                         <button type="submit" class="btn btn-primary mt-3">Add Product</button>
@@ -75,4 +82,9 @@
     </body>
 </html>
 
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
 
