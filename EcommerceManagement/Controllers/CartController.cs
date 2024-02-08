@@ -76,6 +76,7 @@ namespace EcommerceManagement.Controllers
                     await _ecommerceDbContext.SaveChangesAsync();
                 }
             }
+            TempData["productCartRemove"] = "Product Remove Successfully";
             return RedirectToAction("Index");
         }
 

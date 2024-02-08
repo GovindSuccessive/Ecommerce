@@ -204,7 +204,10 @@ namespace EcommerceManagement.Controllers
                 }
                 uniqueFileName = Guid.NewGuid().ToString() + "_" + productModel.ProductImageUplode.FileName;
                 string filePath = Path.Combine(uploadFoler, uniqueFileName);
-                productModel.ProductImageUplode.CopyTo(new FileStream(filePath, FileMode.Create));
+                using(var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    productModel.ProductImageUplode.CopyTo(fileStream);
+                }
             }
 
             if (product != null)

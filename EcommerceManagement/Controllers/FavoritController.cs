@@ -50,7 +50,8 @@ namespace EcommerceManagement.Controllers
                         
                     }
                 }
-                return RedirectToAction("Index","Home");
+                TempData["productFavroitAdded"] = "Product Added to Favorit Successfully";
+                return RedirectToAction("Index");
             }
             return RedirectToAction("Login", "Authentication");
         }
@@ -71,7 +72,7 @@ namespace EcommerceManagement.Controllers
             return RedirectToAction("Index");
         }
 
-        
+  
 
     }
 }

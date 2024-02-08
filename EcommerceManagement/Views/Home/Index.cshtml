@@ -126,11 +126,12 @@
                 </div>
     </section>
 
+    
      @* Product List *@
     <section id="Productlist" class="bg-light pt-2 pb-5">
         <div class="text-end me-5 pt-5 "><h2 class="fw-1000">Our Collections</h2></div>
-                    <div class="container-fluid  mt-5">
-                        <div class="row">
+                    <div class="container-fluid mt-5">
+                        <div class="row ">
                             <div class="col-lg-12 d-flex justify-content-end">
                                <div class="input-group d-flex justify-content-end mt-2">
                                    <form id="searchForm" asp-action="GetProductsByCategory" asp-controller="Product">
@@ -144,9 +145,9 @@
                                </div>
                             </div>
                         </div>
-                       
-                        <div class="row ">
-                            <div class="col-lg-2 pb-5 borderR bgyello">
+
+            <div class="row ">
+                            <div class="col-lg-2  pb-5 borderR bgyello">
                                 <div>
                                    
                                     <select class="form-select mt-5" id="categoryId">
@@ -183,13 +184,13 @@
                                  </div>
                             </div>
 
-                            <div class="col-lg-10">
-                                 <div class="row" id="productList">
-                                    
+                                         <div class="col-lg-10 ">
+                                             <div class="row " id="productList">
+                                             
+                                          </div>
+                                     </div>
                                  </div>
-                            </div>
-                        </div>
-                    </div>
+                             </div>
            </section>
 
      @* About page *@
