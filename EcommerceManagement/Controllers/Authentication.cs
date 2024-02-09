@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using SendGrid.Helpers.Mail;
 
 namespace EcommerceManagement.Controllers
@@ -393,7 +394,89 @@ namespace EcommerceManagement.Controllers
             }
         }
 
+        [HttpGet]
+        public async Task<IActionResult> VerifyEmail(string email)
+        {
+            var isVerified=_userManager.FindByEmailAsync(email);
+            var OTP=Guid.NewGuid().ToString();
+            TempData["OTP"] = OTP;
 
+            if (ModelState.IsValid)
+            {
+                if (isVerified != null)
+                {
+                    var message = $@"
+                                      <html>
+                                      <body style='font-family: Arial, sans-serif; background-color: #f4f4f4; color: #333; padding: 20px;'>
+                                          <div style='max-width: 600px; margin: 0 auto; background-color: #fff; padding: 20px; border-radius: 5px; box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);'>
+                                              <div class=""navbar-brand"" style=""background-color: black; padding: 10px;"">
+                                                 <span style=""font-style: italic; font-weight: bold; font-size: 1.5rem; color: #1d58af;"">Easy</span>
+                                                 <span style=""font-weight: bold; font-size: 1.5rem; color: white;"">Mart</span>
+                                             </div>
+                                              <p>Hello {isVerified.Result.FirstName} {isVerified.Result.LastName},</p>
+                                              <p>Your One Time Password is Genrated Below</p>
+                                               <p>Paste it to the Required Fome Fields</p>
+                                              <ul>
+                                                  <li>OTP:{OTP} </li>
+                                              </ul>
+                                              <p>Thank you!</p>
+                                              <!-- Add your images here -->
+                                      
+                                              <!-- Company Information -->
+                                              <div style='margin-top: 20px; border-top: 1px solid #ddd; padding-top: 10px; font-size: 12px; color: #777;'>
+                                                  <p>EasyMart Ecommerce Company</p>
+                                                  <p>123 Main Street, Cityville</p>
+                                                  <p>Email: info@easymart.com</p>
+                                                  <p>Phone: (123) 456-7890</p>
+                                              </div>
+                                          </div>
+                                      </body>
+                                      </html>";
 
+                  await  _emailSender.SendEmail("Password Change Reques", isVerified.Result.UserName, isVerified.Result.FirstName + isVerified.Result.LastName, message);
+                    return RedirectToAction("VerifyOtp");
+                }
+                ModelState.AddModelError("", "User Not Found");
+                return View(email);
+            }
+            ModelState.AddModelError("", "Invalid Input Fields");
+            return View(email);
+        }
+
+        [HttpGet]
+        public  IActionResult VerifyOtp(string OTP)
+        {
+            if (ModelState.IsValid)
+            {
+                if (OTP != null)
+                {
+                    if (TempData.TryGetValue("OTP", out var sentOTP))
+                    {
+                        ViewBag.OldOtp= sentOTP;
+                    }
+                    if (ViewBag.OldOtp == OTP)
+                    {
+                       return RedirectToAction("ChangeForgatePassword");
+                    }
+                }
+            }
+            ModelState.AddModelError("", "Invalid OTP");
+            return View(OTP);
+        }
+
+        [HttpGet]
+        public IActionResult ChangeForgatePassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult ChangeForgatePassword(ChangeForgatePassword changeForgatePassword)
+        {
+            
+        }
+       
     }
+
+
 }
