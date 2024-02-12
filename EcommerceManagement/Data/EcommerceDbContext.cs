@@ -23,6 +23,8 @@ namespace EcommerceManagement.Data
 
         public DbSet<CartModel> Carts { get; set; }
 
+        public DbSet<ForgatePasswordModel> ForgatePassword  { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // modelBuilder.ApplyConfigurationsFromAssembly(GetType().Assembly);

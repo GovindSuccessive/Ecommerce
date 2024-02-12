@@ -1,0 +1,30 @@
+﻿<html>
+    <head>
+        <style>
+            .borderR{
+                border-radius:1rem;
+            }
+        </style>
+    </head>
+    <body class="container">
+        <div class="row vh-100   d-flex justify-content-center align-items-center">
+            <div class="  col-lg-6">
+                <form method="post" asp-action="VerifyEmail" asp-controller="Authentication" class="form-control p-5 borderR">
+                    <div class="form-outline mb-4">
+                    <input type="email" id="form2Example11" class="form-control "
+                               placeholder="Enter your email address" name="email" required />
+                        <label class="form-label fw-bold text-secondary" for="form2Example11">User Name</label>
+                    </div>
+                    <div class="pt-1  pb-1 w-100">
+                    <div><input type="submit"  class="btn btn-success w-100 " value="Verify" /></div>
+                    </div>
+                </form>
+            </div>
+         </div>
+    </body>
+</html>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -7,7 +7,7 @@ namespace EcommerceManagement.Services
     {
         public async Task SendEmail(string sub,string toMail, string username,string message)
         {
-            var apiKey = "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";
+            var apiKey = "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";
             var client = new SendGridClient(apiKey);
             var from_email = new EmailAddress("iamgovinda100@gmail.com","Admin");
             var subject = sub;

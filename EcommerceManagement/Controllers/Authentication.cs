@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using SendGrid.Helpers.Mail;
+using System.Net.WebSockets;
 
 namespace EcommerceManagement.Controllers
 {
@@ -18,17 +19,20 @@ namespace EcommerceManagement.Controllers
         private readonly UserManager<UserModel> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly EmailSender _emailSender;
+        private readonly EcommerceDbContext _ecommerceDbContext;
 
         public Authentication(SignInManager<UserModel> signInManager, 
             UserManager<UserModel> userManager, 
             RoleManager<IdentityRole> roleManager,
-            EmailSender emailSender
+            EmailSender emailSender,
+            EcommerceDbContext ecommerceDbContext
             )
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _roleManager = roleManager;
            _emailSender = emailSender;
+            _ecommerceDbContext=ecommerceDbContext;
         }
 
 
@@ -395,16 +399,36 @@ namespace EcommerceManagement.Controllers
         }
 
         [HttpGet]
+        public  IActionResult VerifyEmail()
+        {
+            return View();
+        }
+
+        [HttpPost]
         public async Task<IActionResult> VerifyEmail(string email)
         {
-            var isVerified=_userManager.FindByEmailAsync(email);
-            var OTP=Guid.NewGuid().ToString();
-            TempData["OTP"] = OTP;
-
             if (ModelState.IsValid)
             {
+            var isVerified=_userManager.Users.FirstOrDefault(x=>x.UserName==email);
+           
                 if (isVerified != null)
                 {
+                    TempData["ForgateEmail"] = email;
+                    string Otp = Guid.NewGuid().ToString();
+                    if(_ecommerceDbContext.ForgatePassword.Find(email)!=null)
+                    {
+                     _ecommerceDbContext.ForgatePassword.Find(email).Otp = Otp;  
+                    }
+                    else
+                    {
+                        var newData = new ForgatePasswordModel()
+                        {
+                            UserName = email,
+                            Otp = Otp
+                        };
+                        _ecommerceDbContext.ForgatePassword.Add(newData);
+                    }
+                    await _ecommerceDbContext.SaveChangesAsync();
                     var message = $@"
                                       <html>
                                       <body style='font-family: Arial, sans-serif; background-color: #f4f4f4; color: #333; padding: 20px;'>
@@ -413,11 +437,11 @@ namespace EcommerceManagement.Controllers
                                                  <span style=""font-style: italic; font-weight: bold; font-size: 1.5rem; color: #1d58af;"">Easy</span>
                                                  <span style=""font-weight: bold; font-size: 1.5rem; color: white;"">Mart</span>
                                              </div>
-                                              <p>Hello {isVerified.Result.FirstName} {isVerified.Result.LastName},</p>
+                                              <p>Hello {isVerified.FirstName} {isVerified.LastName},</p>
                                               <p>Your One Time Password is Genrated Below</p>
                                                <p>Paste it to the Required Fome Fields</p>
                                               <ul>
-                                                  <li>OTP:{OTP} </li>
+                                                  <li>OTP:{Otp} </li>
                                               </ul>
                                               <p>Thank you!</p>
                                               <!-- Add your images here -->
@@ -433,35 +457,37 @@ namespace EcommerceManagement.Controllers
                                       </body>
                                       </html>";
 
-                  await  _emailSender.SendEmail("Password Change Reques", isVerified.Result.UserName, isVerified.Result.FirstName + isVerified.Result.LastName, message);
-                    return RedirectToAction("VerifyOtp");
+                  await  _emailSender.SendEmail("Password Change Request", isVerified.UserName, isVerified.FirstName + isVerified.LastName, message);
+                    return RedirectToAction("VerifyOtp", new {email=email});
                 }
-                ModelState.AddModelError("", "User Not Found");
-                return View(email);
+                ModelState.AddModelError("VerifyEmail", "User Not Found");
+                return View();
             }
-            ModelState.AddModelError("", "Invalid Input Fields");
+            ModelState.AddModelError("VerifyEmail", "Invalid Input Fields");
             return View(email);
         }
 
         [HttpGet]
+        public IActionResult VerifyOtp()
+        {
+            return View();
+        }
+
+        [HttpPost]
         public  IActionResult VerifyOtp(string OTP)
         {
             if (ModelState.IsValid)
             {
-                if (OTP != null)
+                var email = TempData["ForgateEmail"];
+
+
+                if (_ecommerceDbContext.ForgatePassword.Find(email).Otp == OTP)
                 {
-                    if (TempData.TryGetValue("OTP", out var sentOTP))
-                    {
-                        ViewBag.OldOtp= sentOTP;
-                    }
-                    if (ViewBag.OldOtp == OTP)
-                    {
-                       return RedirectToAction("ChangeForgatePassword");
-                    }
+                    return RedirectToAction("ChangeForgatePassword");
                 }
             }
             ModelState.AddModelError("", "Invalid OTP");
-            return View(OTP);
+            return View();
         }
 
         [HttpGet]
@@ -473,7 +499,21 @@ namespace EcommerceManagement.Controllers
         [HttpPost]
         public IActionResult ChangeForgatePassword(ChangeForgatePassword changeForgatePassword)
         {
-            
+            if (ModelState.IsValid)
+            {
+                var email = TempData["ForgateEmail"];
+                if (email != null)
+                {
+                    var user = _userManager.Users.First(x => x.Email == email);
+                    var oldPassword = _userManager.Users.First(x => x.UserName == email.ToString()).Password;
+                    _userManager.ChangePasswordAsync(user, oldPassword, changeForgatePassword.NewPassword);
+                    user.Password=changeForgatePassword.NewPassword;
+                    user.ConfirmPassword = changeForgatePassword.NewPassword;
+                    _userManager.UpdateAsync(user);
+                }
+                return RedirectToAction("Login");
+            }
+            return View(changeForgatePassword);
         }
        
     }
